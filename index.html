@@ -1575,11 +1575,26 @@
   async function showRandomMoodReveal(moodText, reasonText, companionText) {
     const startedAt = addCardDrawBubble(null, '🎲 오늘의 기운을 뽑고 있어요');
     const line = drawRandomMoodLine();
-    lastReadingContext = `오늘의 랜덤 운세: ${line}`;
+    const combinedText = reasonText ? `${moodText} (이유: ${reasonText})` : moodText;
+
+    const systemPrompt = `당신은 "씬점술사"입니다. 아래는 방금 무작위로 뽑힌 "오늘의 운세" 한 줄이에요. 이 문장을 그대로 전제로 삼아서, 사용자가 말한 오늘의 상황과 연결지어 2~3문장으로 깊게 해석해주세요. 현재 상황을 분석하는 방식이든, 앞으로의 흐름을 짚어주는 방식이든 자유롭게 선택하세요 (예: "그 감정이 사실은 어디서 기인한 건지", "생각보다 더 조심해야 할 부분이 있다" 등). 주어진 운세 문장의 내용에서 벗어나지 마세요. 반드시 JSON만 응답: {"interpretation": "해석 2~3문장"}`;
+    const userMessage = `[오늘의 랜덤 운세] ${line}\n오늘 기분: ${combinedText}`;
+
+    let interpretation;
+    try {
+      const parsed = await callClaudeJSON(systemPrompt, userMessage);
+      interpretation = parsed.interpretation || '지금 느끼는 감정은 겉으로 보이는 것보다 더 깊은 곳에서 시작됐을 가능성이 있어요.';
+    } catch (err) {
+      console.warn('랜덤 운세 해석 API 호출 실패, 로컬 폴백으로 대체:', err);
+      interpretation = '지금 느끼는 감정은 겉으로 보이는 것보다 더 깊은 곳에서 시작됐을 가능성이 있어요. 오늘은 그 흐름에 조금 더 주의를 기울여봐도 좋아요.';
+    }
+
+    const readingText = `${line}\n\n${interpretation}`;
+    lastReadingContext = `오늘의 랜덤 운세: ${line} - ${interpretation}`;
+
     await waitOutMinDisplay(startedAt, 700);
-    renderReadingBubble(line, '랜덤 운세');
+    renderReadingBubble(readingText, '랜덤 운세');
     setTimeout(() => {
-      const combinedText = reasonText ? `${moodText} (이유: ${reasonText})` : moodText;
       const entry = getCategoryEntry(combinedText);
       showDirectionQuestion(entry, companionText, moodText, reasonText, 'saju');
     }, 900);
