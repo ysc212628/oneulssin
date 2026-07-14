@@ -188,6 +188,88 @@
     background: var(--surface-2);
   }
 
+  /* ---- 타로 카드 뽑기 UI ---- */
+  .tarot-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-left: 36px;
+    margin-top: 4px;
+    perspective: 900px;
+  }
+
+  .tarot-card {
+    width: 68px;
+    height: 108px;
+    position: relative;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(.2,.8,.2,1);
+  }
+
+  .tarot-card.disabled {
+    pointer-events: none;
+    opacity: 0.25;
+    filter: grayscale(1);
+    transition: opacity 0.4s ease;
+  }
+
+  .tarot-card.flipped {
+    transform: rotateY(180deg);
+  }
+
+  .tarot-face {
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 6px;
+    border: 1px solid var(--line);
+  }
+
+  .tarot-back {
+    background:
+      repeating-linear-gradient(135deg, #ffffff14 0 6px, transparent 6px 14px),
+      linear-gradient(160deg, var(--tarot-hue-a, #2a0f1c), var(--tarot-hue-b, #150710));
+    font-size: 20px;
+  }
+
+  .tarot-back .tarot-symbol { opacity: 0.85; filter: drop-shadow(0 0 6px #ffffff40); }
+
+  .tarot-front {
+    background: linear-gradient(165deg, var(--surface-2), var(--surface));
+    transform: rotateY(180deg);
+    padding: 8px 6px;
+    text-align: center;
+    border-color: var(--pink-soft);
+  }
+
+  .tarot-front .tarot-icon {
+    font-size: 26px;
+    line-height: 1;
+  }
+
+  .tarot-front.reversed .tarot-icon {
+    transform: rotate(180deg);
+    display: inline-block;
+  }
+
+  .tarot-front .tarot-name {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--ivory);
+  }
+
+  .tarot-front .tarot-orient {
+    font-size: 10px;
+    color: var(--pink);
+  }
+
   .fortune-bubble {
     background: linear-gradient(155deg, var(--surface-2), var(--surface));
     border: 1px solid var(--pink-soft);
@@ -783,28 +865,28 @@
 
   // ---- 타로 22장 메이저 아르카나 ----
   const TAROT_DECK = [
-    { kr: '바보', upright: '새로운 시작, 순수한 도전, 계산 없는 발걸음', reversed: '무모함, 준비 없는 출발, 방향을 잃음' },
-    { kr: '마법사', upright: '내 안의 자원을 모아 현실로 만들어내는 힘', reversed: '재능을 낭비함, 자신감 부족' },
-    { kr: '여사제', upright: '직관, 고요한 통찰, 말하지 않아도 아는 마음', reversed: '억눌린 직감, 혼란스러운 내면' },
-    { kr: '여황제', upright: '풍요, 돌봄, 감정이 자라나는 시기', reversed: '과잉보호, 정체된 성장' },
-    { kr: '황제', upright: '안정, 질서, 스스로 세운 원칙의 힘', reversed: '경직됨, 통제하려는 마음' },
-    { kr: '교황', upright: '전통적인 지혜, 배움, 누군가에게 기대고 싶은 마음', reversed: '틀에서 벗어나고 싶은 반항심' },
-    { kr: '연인', upright: '진심의 연결, 선택의 갈림길, 마음이 이끄는 방향', reversed: '갈등, 엇갈리는 마음' },
-    { kr: '전차', upright: '의지로 밀고 나가는 추진력, 방향을 잡은 확신', reversed: '통제력을 잃음, 방향 없는 질주' },
-    { kr: '힘', upright: '부드럽지만 단단한 내면의 용기', reversed: '자기 의심, 소진된 에너지' },
-    { kr: '은둔자', upright: '혼자만의 시간이 필요한 순간, 내면을 향한 탐구', reversed: '고립감, 지나친 자기 침잠' },
-    { kr: '운명의 수레바퀴', upright: '흐름이 바뀌는 전환점, 예상 밖의 기회', reversed: '반복되는 패턴, 흐름에 저항함' },
-    { kr: '정의', upright: '균형을 찾으려는 마음, 있는 그대로 보는 눈', reversed: '치우친 판단, 불공평하다는 느낌' },
-    { kr: '매달린 사람', upright: '멈춰서야 보이는 것들, 다른 시선으로 바라보기', reversed: '의미 없는 정체, 희생만 하는 기분' },
-    { kr: '죽음', upright: '끝나야 시작되는 것, 완전히 다른 국면으로의 전환', reversed: '변화를 거부함, 놓지 못하는 마음' },
-    { kr: '절제', upright: '조화, 서두르지 않고 맞춰가는 균형감', reversed: '불균형, 극단으로 치우침' },
-    { kr: '악마', upright: '벗어나기 힘든 집착이나 습관을 직면함', reversed: '속박에서 벗어나기 시작함' },
-    { kr: '탑', upright: '갑작스러운 붕괴, 그러나 그 뒤에 오는 진짜 기반', reversed: '다가올 변화를 피하고만 있음' },
-    { kr: '별', upright: '희망, 회복하는 마음, 다시 믿어보고 싶은 순간', reversed: '희미해진 희망, 지친 믿음' },
-    { kr: '달', upright: '불확실함 속의 감정, 뚜렷하지 않은 불안', reversed: '혼란이 걷히고 진실이 보이기 시작함' },
-    { kr: '태양', upright: '순수한 기쁨, 있는 그대로 빛나는 자신', reversed: '가려진 기쁨, 과장된 밝음' },
-    { kr: '심판', upright: '지난 시간을 돌아보고 새로운 국면을 받아들임', reversed: '자기 자신을 너무 가혹하게 평가함' },
-    { kr: '세계', upright: '한 단계의 완성, 스스로 이뤄낸 매듭', reversed: '마무리 짓지 못한 채 남은 미련' }
+    { kr: '바보', icon: '🧭', hue: 45, upright: '새로운 시작, 순수한 도전, 계산 없는 발걸음', reversed: '무모함, 준비 없는 출발, 방향을 잃음' },
+    { kr: '마법사', icon: '🪄', hue: 265, upright: '내 안의 자원을 모아 현실로 만들어내는 힘', reversed: '재능을 낭비함, 자신감 부족' },
+    { kr: '여사제', icon: '🌙', hue: 210, upright: '직관, 고요한 통찰, 말하지 않아도 아는 마음', reversed: '억눌린 직감, 혼란스러운 내면' },
+    { kr: '여황제', icon: '👑', hue: 330, upright: '풍요, 돌봄, 감정이 자라나는 시기', reversed: '과잉보호, 정체된 성장' },
+    { kr: '황제', icon: '⚔️', hue: 15, upright: '안정, 질서, 스스로 세운 원칙의 힘', reversed: '경직됨, 통제하려는 마음' },
+    { kr: '교황', icon: '🕊️', hue: 200, upright: '전통적인 지혜, 배움, 누군가에게 기대고 싶은 마음', reversed: '틀에서 벗어나고 싶은 반항심' },
+    { kr: '연인', icon: '💞', hue: 340, upright: '진심의 연결, 선택의 갈림길, 마음이 이끄는 방향', reversed: '갈등, 엇갈리는 마음' },
+    { kr: '전차', icon: '🏇', hue: 25, upright: '의지로 밀고 나가는 추진력, 방향을 잡은 확신', reversed: '통제력을 잃음, 방향 없는 질주' },
+    { kr: '힘', icon: '🦁', hue: 35, upright: '부드럽지만 단단한 내면의 용기', reversed: '자기 의심, 소진된 에너지' },
+    { kr: '은둔자', icon: '🏮', hue: 40, upright: '혼자만의 시간이 필요한 순간, 내면을 향한 탐구', reversed: '고립감, 지나친 자기 침잠' },
+    { kr: '운명의 수레바퀴', icon: '🎡', hue: 280, upright: '흐름이 바뀌는 전환점, 예상 밖의 기회', reversed: '반복되는 패턴, 흐름에 저항함' },
+    { kr: '정의', icon: '⚖️', hue: 190, upright: '균형을 찾으려는 마음, 있는 그대로 보는 눈', reversed: '치우친 판단, 불공평하다는 느낌' },
+    { kr: '매달린 사람', icon: '🙃', hue: 220, upright: '멈춰서야 보이는 것들, 다른 시선으로 바라보기', reversed: '의미 없는 정체, 희생만 하는 기분' },
+    { kr: '죽음', icon: '🦋', hue: 260, upright: '끝나야 시작되는 것, 완전히 다른 국면으로의 전환', reversed: '변화를 거부함, 놓지 못하는 마음' },
+    { kr: '절제', icon: '🌊', hue: 195, upright: '조화, 서두르지 않고 맞춰가는 균형감', reversed: '불균형, 극단으로 치우침' },
+    { kr: '악마', icon: '⛓️', hue: 0, upright: '벗어나기 힘든 집착이나 습관을 직면함', reversed: '속박에서 벗어나기 시작함' },
+    { kr: '탑', icon: '🗼', hue: 355, upright: '갑작스러운 붕괴, 그러나 그 뒤에 오는 진짜 기반', reversed: '다가올 변화를 피하고만 있음' },
+    { kr: '별', icon: '⭐', hue: 205, upright: '희망, 회복하는 마음, 다시 믿어보고 싶은 순간', reversed: '희미해진 희망, 지친 믿음' },
+    { kr: '달', icon: '🌘', hue: 235, upright: '불확실함 속의 감정, 뚜렷하지 않은 불안', reversed: '혼란이 걷히고 진실이 보이기 시작함' },
+    { kr: '태양', icon: '☀️', hue: 42, upright: '순수한 기쁨, 있는 그대로 빛나는 자신', reversed: '가려진 기쁨, 과장된 밝음' },
+    { kr: '심판', icon: '📯', hue: 250, upright: '지난 시간을 돌아보고 새로운 국면을 받아들임', reversed: '자기 자신을 너무 가혹하게 평가함' },
+    { kr: '세계', icon: '🌍', hue: 160, upright: '한 단계의 완성, 스스로 이뤄낸 매듭', reversed: '마무리 짓지 못한 채 남은 미련' }
   ];
 
   function drawTarotCard() {
@@ -1409,43 +1491,82 @@
   function showTarotDraw(moodText, reasonText, companionText) {
     const row = document.createElement('div');
     row.className = 'bubble-row';
-    row.innerHTML = `<div class="avatar">🔮</div><div class="bubble">카드 세 장을 펼쳤어요. 마음이 가는 카드 한 장을 골라줘요.</div>`;
+    row.innerHTML = `<div class="avatar">🔮</div><div class="bubble">카드 다섯 장을 펼쳤어요. 마음이 끌리는 카드 한 장을 골라줘요.</div>`;
     chatLog.appendChild(row);
 
     const cardRow = document.createElement('div');
-    cardRow.className = 'mood-options';
-    cardRow.style.marginLeft = '36px';
-    ['🎴 첫 번째 카드', '🎴 두 번째 카드', '🎴 세 번째 카드'].forEach(label => {
-      const chip = document.createElement('div');
-      chip.className = 'mood-chip depth-chip';
-      chip.style.opacity = '1';
-      chip.style.cursor = 'pointer';
-      chip.textContent = label;
-      chip.addEventListener('click', () => {
-        cardRow.remove();
+    cardRow.className = 'tarot-row';
+    const backSymbols = ['🔮', '✨', '🌙', '⭐', '🪄'];
+    const cardEls = [];
+
+    backSymbols.forEach(sym => {
+      const card = document.createElement('div');
+      card.className = 'tarot-card';
+      card.innerHTML = `
+        <div class="tarot-face tarot-back"><span class="tarot-symbol">${sym}</span></div>
+        <div class="tarot-face tarot-front">
+          <span class="tarot-icon"></span>
+          <span class="tarot-name"></span>
+          <span class="tarot-orient"></span>
+        </div>
+      `;
+      card.addEventListener('click', () => {
+        if (card.classList.contains('flipped')) return;
+        cardEls.forEach(other => { if (other !== card) other.classList.add('disabled'); });
+
         const drawn = drawTarotCard();
-        revealTarotCard(drawn);
+        card.querySelector('.tarot-icon').textContent = drawn.icon;
+        card.querySelector('.tarot-name').textContent = drawn.kr;
+        card.querySelector('.tarot-orient').textContent = drawn.reversed ? '역방향' : '정방향';
+        if (drawn.reversed) card.querySelector('.tarot-front').classList.add('reversed');
+        card.classList.add('flipped');
+        activeChipRow = null;
+
         setTimeout(() => {
-          const combinedText = reasonText ? `${moodText} (이유: ${reasonText})` : moodText;
-          const entry = getCategoryEntry(combinedText);
-          showDirectionQuestion(entry, companionText, moodText, reasonText, 'tarot');
-        }, 900);
+          interpretTarotDraw(drawn, moodText, reasonText, companionText);
+        }, 750);
       });
-      cardRow.appendChild(chip);
+      cardRow.appendChild(card);
+      cardEls.push(card);
     });
+
     chatLog.appendChild(cardRow);
     activeChipRow = cardRow;
     scrollToBottom();
   }
 
-  function revealTarotCard(drawn) {
-    if (activeChipRow) { activeChipRow = null; }
-    const row = document.createElement('div');
-    row.className = 'bubble-row';
+  async function interpretTarotDraw(drawn, moodText, reasonText, companionText) {
+    const startedAt = addCardDrawBubble(null, '🔮 카드를 해석하고 있어요');
+    const combinedText = reasonText ? `${moodText} (이유: ${reasonText})` : moodText;
     const orientLabel = drawn.reversed ? '역방향' : '정방향';
-    row.innerHTML = `<div class="avatar">🔮</div><div class="bubble">✨ <b>${drawn.kr}</b> · ${orientLabel} 카드가 나왔어요.<br><span style="opacity:.75;font-size:12.5px">${drawn.meaning}</span></div>`;
-    chatLog.appendChild(row);
-    scrollToBottom();
+    const meaning = drawn.reversed ? drawn.reversed : drawn.upright;
+
+    const systemPrompt = `당신은 신뢰감 있는 타로 전문가 "씬점술사"입니다. 사용자가 방금 실제로 뽑은 타로 카드를 바탕으로, 아래 두 문단 구조로 타로풀이를 써주세요.
+
+[1문단] 카드 이름(${drawn.kr}, ${orientLabel})이 무엇을 상징하는 카드인지 충분히 설명하세요. 이 카드의 일반적인 의미(${meaning})를 근거로, 2~3문장으로 카드 자체를 소개하세요.
+
+[2문단] 타로는 현재보다 앞으로의 흐름을 짚어주는 점술이라는 걸 기억하고, 사용자가 오늘 말한 상황과 이 카드를 연결지어 "앞으로 어떤 일/흐름이 다가올 것 같다"는 식의 미래형 예언을 2~3문장으로 단호하게 전달하세요. 굳이 다독이거나 위로하려 하지 말고, 카드가 실제로 암시하는 방향(좋을 수도, 경고성일 수도 있음)을 있는 그대로 전달하세요.
+
+카드 의미에 없는 것을 지어내지 마세요. 반드시 JSON만 응답: {"fortune": "1문단\\n\\n2문단"}`;
+    const userMessage = `[뽑힌 카드] ${drawn.kr} (${orientLabel})\n[카드 의미] ${meaning}\n오늘 기분: ${combinedText}`;
+
+    let readingText;
+    try {
+      const parsed = await callClaudeJSON(systemPrompt, userMessage);
+      readingText = parsed.fortune || `${drawn.kr}(${orientLabel}) 카드는 ${meaning}을 뜻해요. 지금 상황과 맞물려 그 흐름이 곧 드러날 거예요.`;
+    } catch (err) {
+      console.warn('타로 해석 API 호출 실패, 로컬 폴백으로 대체:', err);
+      readingText = `${drawn.kr}(${orientLabel}) 카드는 ${meaning}을 뜻해요.\n\n지금 말한 상황과 맞물려, 이 흐름이 머지않아 구체적으로 드러날 가능성이 커요.`;
+    }
+
+    await waitOutMinDisplay(startedAt, 900);
+    renderReadingBubble(readingText, '타로');
+
+    setTimeout(() => {
+      const combinedText = reasonText ? `${moodText} (이유: ${reasonText})` : moodText;
+      const entry = getCategoryEntry(combinedText);
+      showDirectionQuestion(entry, companionText, moodText, reasonText, 'tarot');
+    }, 900);
   }
 
   function showDirectionQuestion(entry, companionText, moodText, reasonText, method) {
