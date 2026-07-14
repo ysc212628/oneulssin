@@ -40,6 +40,1319 @@
     position: relative;
   }
 
+  @media (min-width: 640px) {
+    .app {
+      max-width: 600px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    html, body { align-items: center; }
+    .app {
+      max-width: 760px;
+      min-height: 92vh;
+      margin: 4vh 0;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      box-shadow: 0 30px 80px -20px #00000090;
+      overflow: hidden;
+    }
+  }
+
+  /* ---- header ---- */
+  header {
+    padding: 28px 24px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .mark {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--pink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .mark span { transform: translateY(-1px); }
+
+  .brand-text { display: flex; flex-direction: column; }
+
+  .brand-text .name {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 800;
+    font-size: 19px;
+    letter-spacing: -0.4px;
+  }
+
+  .brand-text .tagline {
+    font-size: 11.5px;
+    color: var(--ivory-dim);
+    letter-spacing: 0.3px;
+    margin-top: 2px;
+  }
+
+  /* ---- chat area ---- */
+  .chat {
+    flex: 1;
+    padding: 28px 20px 140px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    overflow-y: auto;
+  }
+
+  .date-chip {
+    align-self: center;
+    font-size: 11px;
+    color: var(--ivory-dim);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 5px 14px;
+    border-radius: 100px;
+    letter-spacing: 0.4px;
+  }
+
+  .bubble-row { display: flex; gap: 10px; align-items: flex-end; }
+
+  .avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--surface-2);
+    border: 1px solid var(--pink-soft);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+
+  .bubble {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 14px 16px;
+    border-radius: 4px 16px 16px 16px;
+    font-size: 14.5px;
+    line-height: 1.65;
+    max-width: 82%;
+  }
+
+  .bubble.title-line {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 600;
+    color: var(--pink);
+    font-size: 15px;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .bubble-row.user {
+    justify-content: flex-end;
+  }
+
+  .bubble-row.user .bubble {
+    background: var(--wine);
+    border-color: #ffffff1a;
+    border-radius: 16px 4px 16px 16px;
+    padding: 9px 16px;
+    line-height: 1.5;
+  }
+
+  .mood-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-left: 36px;
+  }
+
+  .mood-chip {
+    font-size: 13px;
+    padding: 9px 14px;
+    border-radius: 100px;
+    border: 1px solid var(--pink-soft);
+    background: var(--surface);
+    color: var(--ivory);
+    letter-spacing: 0.2px;
+    opacity: 0.55;
+  }
+
+  .mood-chip.placeholder-active {
+    opacity: 1;
+    border-color: var(--pink);
+    background: var(--surface-2);
+  }
+
+  .fortune-bubble {
+    background: linear-gradient(155deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--pink-soft);
+  }
+
+  .fortune-label {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 600;
+    color: var(--pink);
+    font-size: 12px;
+    letter-spacing: 0.4px;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .suggest-row {
+    padding: 0 20px 10px;
+  }
+
+  .suggest-label {
+    font-size: 11px;
+    color: var(--ivory-dim);
+    margin-bottom: 8px;
+    letter-spacing: 0.2px;
+  }
+
+  .suggest-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .mini-chip {
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: 100px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ivory-dim);
+    font-family: 'Pretendard', sans-serif;
+    cursor: pointer;
+  }
+
+  .mini-chip:hover {
+    border-color: var(--pink-soft);
+    color: var(--ivory);
+  }
+
+  .typing-dots span {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    background: var(--ivory-dim);
+    border-radius: 50%;
+    margin-right: 3px;
+    animation: blink 1.2s infinite;
+  }
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink { 0%,80%,100% { opacity: 0.25; } 40% { opacity: 1; } }
+
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--pink-soft);
+    border-radius: 14px;
+    padding: 18px;
+    max-width: 88%;
+  }
+
+  .result-card .movie-title {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    letter-spacing: -0.3px;
+    margin-bottom: 6px;
+  }
+
+  .result-card .stars {
+    color: var(--pink);
+    font-size: 13px;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+
+  .result-card .reason {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--ivory-dim);
+  }
+
+  .error-text {
+    color: var(--pink);
+    font-size: 12.5px;
+  }
+
+  .retry-btn {
+    margin-top: 8px;
+    display: inline-block;
+    background: var(--surface-2);
+    border: 1px solid var(--pink-soft);
+    color: var(--ivory);
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 100px;
+    cursor: pointer;
+    font-family: 'Pretendard', sans-serif;
+  }
+
+  /* ---- input bar ---- */
+  .input-bar {
+    position: sticky;
+    bottom: 0;
+    padding: 16px 20px 24px;
+    background: linear-gradient(to top, var(--bg) 60%, transparent);
+  }
+
+  .input-shell {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 6px 6px 6px 18px;
+  }
+
+  .input-shell textarea {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--ivory);
+    font-size: 14px;
+    font-family: 'Pretendard', sans-serif;
+    resize: none;
+    max-height: 120px;
+    line-height: 1.5;
+    padding: 8px 0;
+    overflow-y: auto;
+  }
+
+  .input-shell textarea::placeholder { color: var(--ivory-dim); }
+
+  .send-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--pink);
+    border: none;
+    color: #FFFFFF;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .stage-note {
+    text-align: center;
+    font-size: 10.5px;
+    color: var(--ivory-dim);
+    margin-top: 10px;
+    letter-spacing: 0.3px;
+  }
+
+  /* ---- onboarding modal ---- */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.88);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    transition: opacity 0.5s ease;
+  }
+
+  .overlay.hide {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .modal {
+    width: 86%;
+    max-width: 340px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 32px 26px;
+    text-align: center;
+  }
+
+  .modal .mark {
+    margin: 0 auto 16px;
+  }
+
+  .modal h2 {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: -0.3px;
+    margin-bottom: 8px;
+  }
+
+  .modal p {
+    font-size: 12.5px;
+    color: var(--ivory-dim);
+    line-height: 1.6;
+    margin-bottom: 22px;
+  }
+
+  .modal input {
+    width: 100%;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 13px 14px;
+    color: var(--ivory);
+    font-size: 14px;
+    font-family: 'Pretendard', sans-serif;
+    outline: none;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+
+  .modal input:focus { border-color: var(--pink); }
+
+  .modal input::placeholder { color: var(--ivory-dim); }
+
+  .gender-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .gender-btn {
+    flex: 1;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 8px;
+    color: var(--ivory-dim);
+    font-size: 12.5px;
+    font-family: 'Pretendard', sans-serif;
+    cursor: pointer;
+  }
+
+  .gender-btn.selected {
+    border-color: var(--pink);
+    color: var(--ivory);
+    background: var(--pink-soft);
+  }
+
+  .modal .cta {
+    width: 100%;
+    margin-top: 14px;
+    background: var(--pink);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    padding: 13px 14px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Pretendard', sans-serif;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+  }
+
+  .modal .skip {
+    display: block;
+    margin: 14px auto 0;
+    background: none;
+    border: none;
+    color: var(--ivory-dim);
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .modal-loading {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .spinner {
+    width: 26px;
+    height: 26px;
+    border: 2.5px solid var(--line);
+    border-top-color: var(--pink);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .modal-loading p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--ivory-dim);
+  }
+</style>
+</head>
+<body>
+
+<div id="debugPanel" style="position:fixed; top:8px; right:8px; z-index:9999; background:#111; border:1px solid #444; border-radius:8px; padding:8px 10px; font-size:12px; color:#eee; max-width:280px;">
+  <button id="debugTestBtn" style="width:100%; padding:6px; cursor:pointer;">API 연결 테스트 (이 파일 안에서)</button>
+  <div id="debugResult" style="margin-top:6px; white-space:pre-wrap; word-break:break-all; max-height:150px; overflow:auto;"></div>
+</div>
+<script>
+  document.getElementById('debugTestBtn').addEventListener('click', async () => {
+    const out = document.getElementById('debugResult');
+    out.textContent = '호출 중...';
+    try {
+      const response = await fetch("/api/claude", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-6",
+          max_tokens: 100,
+          messages: [{ role: "user", content: "안녕이라고만 답해줘" }]
+        })
+      });
+      const raw = await response.text();
+      out.textContent = 'HTTP ' + response.status + '\n' + raw.slice(0, 300);
+    } catch (err) {
+      out.textContent = 'fetch 자체 실패: ' + err.message;
+    }
+  });
+</script>
+
+<div class="overlay" id="onboardingOverlay">
+  <div class="modal">
+    <div class="mark"><span>🌙</span></div>
+
+    <div id="modalForm">
+      <h2>오늘의 씬</h2>
+      <p>생년월일과 성별을 알려주면<br>오늘 당신의 운세와 기운을 함께 읽어드릴게요.<br>다음부터는 다시 묻지 않을게요.</p>
+      <input type="text" id="birthInput" placeholder="예: 2001.03.14" inputmode="numeric">
+      <div class="gender-row">
+        <button class="gender-btn" data-gender="여성">여성</button>
+        <button class="gender-btn" data-gender="남성">남성</button>
+        <button class="gender-btn" data-gender="밝히지 않음">밝히지 않음</button>
+      </div>
+      <button class="cta" id="startBtn">시작하기</button>
+      <button class="skip" id="skipBtn">나중에 할게요</button>
+    </div>
+
+    <div class="modal-loading" id="modalLoading">
+      <div class="spinner"></div>
+      <p>생년월일로 당신의 오늘의 운세를<br>분석하고 있어요...</p>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+
+  <header>
+    <div class="mark"><span>🌙</span></div>
+    <div class="brand-text">
+      <div class="name">오늘의 씬</div>
+      <div class="tagline">오늘 당신의 기운에 어울리는 장면</div>
+    </div>
+  </header>
+
+  <div class="chat" id="chatLog">
+
+    <div class="date-chip">2026년 7월 4일 · 토요일</div>
+
+    <div class="bubble-row">
+      <div class="avatar">🔮</div>
+      <div class="bubble">
+        <span class="title-line">씬점술사</span>
+        어서 와요. 당신의 왓챠 취향, 다 확인했어요.
+      </div>
+    </div>
+
+    <div class="bubble-row">
+      <div class="avatar">🔮</div>
+      <div class="bubble fortune-bubble">
+        <span class="fortune-label">오늘의 기운</span>
+        오늘 당신에게는 잔잔한 듯 안쪽부터 일렁이는 파도가 흐르고 있어요.
+      </div>
+    </div>
+
+    <div class="bubble-row">
+      <div class="avatar">🔮</div>
+      <div class="bubble">
+        근데 지금 마음은 어때요? 편하게, 있는 그대로 적어줘요.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="suggest-row" id="suggestRow">
+    <div class="suggest-label">뭐라 적을지 막막하면, 이런 것도 괜찮아요</div>
+    <div class="suggest-chips">
+      <button class="mini-chip" data-text="오늘 왠지 다 무기력하고 눕고만 싶어">😮‍💨 무기력하고 눕고 싶어</button>
+      <button class="mini-chip" data-text="이유 없이 마음이 두근거리고 설레">⚡ 두근거리고 설레</button>
+      <button class="mini-chip" data-text="요즘 고민이 많아서 답을 찾고 싶어">🌫️ 고민의 답을 찾고 싶어</button>
+    </div>
+  </div>
+
+  <div class="input-bar">
+    <div class="input-shell">
+      <textarea id="moodInput" placeholder="오늘 기분, 편하게 적어줘요" rows="1"></textarea>
+      <button class="send-btn" id="sendBtn">↑</button>
+    </div>
+    <div class="stage-note">직접 적어도 되고, 아래 예시를 참고해도 돼요 — 결과는 똑같이 작동해요</div>
+  </div>
+
+</div>
+
+<script>
+  const overlay = document.getElementById('onboardingOverlay');
+  const modalForm = document.getElementById('modalForm');
+  const modalLoading = document.getElementById('modalLoading');
+  const startBtn = document.getElementById('startBtn');
+  const skipBtn = document.getElementById('skipBtn');
+  let userBirth = '';
+  let userGender = '';
+
+  document.querySelectorAll('.gender-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      userGender = btn.dataset.gender;
+    });
+  });
+
+  function proceedToChat() {
+    userBirth = document.getElementById('birthInput').value.trim();
+    modalForm.style.display = 'none';
+    modalLoading.style.display = 'flex';
+    setTimeout(() => {
+      overlay.classList.add('hide');
+    }, 1600);
+  }
+
+  startBtn.addEventListener('click', proceedToChat);
+  skipBtn.addEventListener('click', proceedToChat);
+</script>
+
+<script>
+  // 큐레이션 영화 리스트 — 실제 왓챠/외부 API 대신 직접 선별한 무드 태그 기반 리스트
+  const MOVIE_POOL = [
+    { title: "화양연화", tags: "그리움, 억눌린 감정, 아련함, 어른의 사랑" },
+    { title: "이터널 선샤인", tags: "상실, 기억, 후회, 그래도 다시 사랑" },
+    { title: "패터슨", tags: "무기력, 잔잔함, 반복되는 일상, 소소한 위로" },
+    { title: "라라랜드", tags: "설렘, 꿈, 두근거림, 엇갈림" },
+    { title: "her", tags: "고독, 그리움, 관계에 대한 고민, 디지털 시대의 사랑" },
+    { title: "소공녀", tags: "무기력, 상실, 그래도 나아가는 하루, 잔잔한 위로" },
+    { title: "콜 미 바이 유어 네임", tags: "설렘, 여름, 첫사랑, 두근거림" },
+    { title: "박쥐", tags: "파괴적 카타르시스, 욕망, 어두운 감정" },
+    { title: "화차", tags: "정체성, 불안, 추적, 서늘한 긴장감" },
+    { title: "리틀 포레스트", tags: "위로, 회복, 자연, 느린 치유" },
+    { title: "우리들", tags: "관계에 대한 고민, 성장통, 여린 마음" },
+    { title: "죽여주는 여자", tags: "고독, 사회의 그늘, 씁쓸한 위로" },
+    { title: "다가오는 것들", tags: "인생의 전환점, 고민, 담담한 성찰" },
+    { title: "행복한 라짜로", tags: "순수함, 몽환, 세상에 대한 물음표" },
+    { title: "브루클린", tags: "그리움, 선택의 고민, 성장" },
+    { title: "빅 식", tags: "관계에 대한 고민, 잔잔한 유머, 위로" },
+    { title: "레이니 데이 인 뉴욕", tags: "설렘, 도시의 낭만, 가벼운 두근거림" },
+    { title: "환상의 빛", tags: "상실, 애도, 고요한 슬픔, 잔잔한 치유" }
+  ];
+
+  const sendBtn = document.getElementById('sendBtn');
+  const moodInput = document.getElementById('moodInput');
+  const chatLog = document.getElementById('chatLog');
+  const suggestRow = document.getElementById('suggestRow');
+
+  function scrollToBottom() {
+    chatLog.scrollTop = chatLog.scrollHeight;
+  }
+
+  function addUserBubble(text) {
+    const row = document.createElement('div');
+    row.className = 'bubble-row user';
+    row.innerHTML = `<div class="bubble"></div>`;
+    row.querySelector('.bubble').textContent = text;
+    chatLog.appendChild(row);
+    scrollToBottom();
+  }
+
+  function addBotLoadingBubble() {
+    const row = document.createElement('div');
+    row.className = 'bubble-row';
+    row.id = 'loadingRow';
+    row.innerHTML = `
+      <div class="avatar">🔮</div>
+      <div class="bubble typing-dots"><span></span><span></span><span></span></div>
+    `;
+    chatLog.appendChild(row);
+    scrollToBottom();
+  }
+
+  function renderError(detail, retryText) {
+    const loadingRow = document.getElementById('loadingRow');
+    if (loadingRow) loadingRow.remove();
+    const row = document.createElement('div');
+    row.className = 'bubble-row';
+    row.innerHTML = `<div class="avatar">🔮</div><div class="bubble error-text"></div>`;
+    const bubble = row.querySelector('.bubble');
+    bubble.textContent = '잠시 기운이 흐트러졌나 봐요. (오류: ' + detail + ') ';
+    const retryBtn = document.createElement('button');
+    retryBtn.className = 'retry-btn';
+    retryBtn.textContent = '다시 시도';
+    retryBtn.addEventListener('click', () => {
+      row.remove();
+      getReadingStep(retryText, '', 'saju', '');
+    });
+    bubble.appendChild(document.createElement('br'));
+    bubble.appendChild(retryBtn);
+    chatLog.appendChild(row);
+    scrollToBottom();
+  }
+
+  const FALLBACK_LIBRARY = [
+    { keywords: ['무기력','눕고','피곤','지쳐','지침','귀찮'],
+      reading: "오늘 당신의 운세는 잠시 멈춰 서서 숨을 고르라 말하고 있어요.",
+      comfort: { movie_title: "소공녀", movie_reason: "무언가를 놓아도 괜찮다고 조용히 다독여주는 영화예요.", rating: 4.3 },
+      cheer: { movie_title: "빅 식", movie_reason: "무거운 하루에 가벼운 유머 한 스푼을 얹어주는 영화예요.", rating: 4.2 } },
+    { keywords: ['슬프','눈물','울고','서럽'],
+      reading: "오늘 당신의 운세엔 눈물 한 방울만큼의 슬픔이 스며 있어요.",
+      comfort: { movie_title: "환상의 빛", movie_reason: "슬픔을 억누르지 않고 그대로 바라보게 해주는 영화예요.", rating: 4.4 },
+      cheer: { movie_title: "리틀 포레스트", movie_reason: "느리지만 분명하게 다시 웃게 만들어주는 영화예요.", rating: 4.3 } },
+    { keywords: ['우울','공허','의미없','허무'],
+      reading: "오늘 당신의 운세는 마음 한켠이 텅 빈 듯한 시간을 지나고 있어요.",
+      comfort: { movie_title: "죽여주는 여자", movie_reason: "삶의 그늘까지 있는 그대로 껴안아주는 영화예요.", rating: 4.1 },
+      cheer: { movie_title: "행복한 라짜로", movie_reason: "순수함이 오히려 위로가 되는 몽환적인 영화예요.", rating: 4.2 } },
+    { keywords: ['외로','고독','혼자'],
+      reading: "오늘 당신의 운세엔 혼자라는 감각이 유독 크게 다가와요.",
+      comfort: { movie_title: "her", movie_reason: "고독을 아름답게 그려내며 곁에 있어주는 영화예요.", rating: 4.5 },
+      cheer: { movie_title: "콜 미 바이 유어 네임", movie_reason: "여름 햇살 같은 온기로 마음을 채워주는 영화예요.", rating: 4.6 } },
+    { keywords: ['그립','보고싶','그리움','추억'],
+      reading: "오늘 당신의 운세엔 지나간 것들이 잔잔히 되돌아오고 있어요.",
+      comfort: { movie_title: "화양연화", movie_reason: "말하지 못한 그리움을 가장 아름답게 그려낸 영화예요.", rating: 4.7 },
+      cheer: { movie_title: "브루클린", movie_reason: "그리움 속에서도 앞으로 나아가는 용기를 보여주는 영화예요.", rating: 4.3 } },
+    { keywords: ['불안','초조','걱정'],
+      reading: "오늘 당신의 운세는 마음이 자꾸 앞서가려는 하루예요.",
+      comfort: { movie_title: "패터슨", movie_reason: "불안한 마음도 잔잔한 일상 속에서 가라앉혀주는 영화예요.", rating: 4.3 },
+      cheer: { movie_title: "빅 식", movie_reason: "걱정을 가볍게 웃어넘기게 해주는 영화예요.", rating: 4.2 } },
+    { keywords: ['스트레스','답답','짜증'],
+      reading: "오늘 당신의 운세는 마음속 응어리를 풀어낼 때예요.",
+      comfort: { movie_title: "리틀 포레스트", movie_reason: "복잡한 마음을 자연스럽게 비워내게 하는 영화예요.", rating: 4.4 },
+      cheer: { movie_title: "라라랜드", movie_reason: "속 시원한 에너지로 답답함을 날려주는 영화예요.", rating: 4.6 } },
+    { keywords: ['화나','분노','열받','빡치'],
+      reading: "오늘 당신의 운세엔 억눌린 감정이 터져 나오고 싶어해요.",
+      comfort: { movie_title: "박쥐", movie_reason: "억눌린 욕망과 분노를 날것 그대로 마주하게 하는 영화예요.", rating: 4.0 },
+      cheer: { movie_title: "빅 식", movie_reason: "화난 마음도 슬쩍 웃음으로 풀어주는 영화예요.", rating: 4.2 } },
+    { keywords: ['설레','두근','떨려'],
+      reading: "오늘 당신의 운세엔 작은 불씨 같은 설렘이 일렁여요.",
+      comfort: { movie_title: "콜 미 바이 유어 네임", movie_reason: "여름날의 떨림을 섬세하게 담아낸 영화예요.", rating: 4.6 },
+      cheer: { movie_title: "라라랜드", movie_reason: "두근거림을 화려하게 터뜨려주는 영화예요.", rating: 4.6 } },
+    { keywords: ['신나','기대','들뜨'],
+      reading: "오늘 당신의 운세는 앞으로의 일에 잔뜩 들떠 있어요.",
+      comfort: { movie_title: "레이니 데이 인 뉴욕", movie_reason: "설렘을 낭만적으로 즐기게 해주는 영화예요.", rating: 4.2 },
+      cheer: { movie_title: "라라랜드", movie_reason: "기대감을 한껏 밀어붙이는 에너지 넘치는 영화예요.", rating: 4.6 } },
+    { keywords: ['사랑','썸','좋아하는 사람'],
+      reading: "오늘 당신의 운세엔 누군가를 향한 마음이 잔잔히 흐르고 있어요.",
+      comfort: { movie_title: "콜 미 바이 유어 네임", movie_reason: "설렘과 두려움이 공존하는 사랑을 섬세하게 그린 영화예요.", rating: 4.6 },
+      cheer: { movie_title: "레이니 데이 인 뉴욕", movie_reason: "사랑을 가볍고 낭만적으로 즐기게 해주는 영화예요.", rating: 4.2 } },
+    { keywords: ['이별','헤어져','헤어졌','상실'],
+      reading: "오늘 당신의 운세는 무언가를 떠나보낸 자리를 돌아보고 있어요.",
+      comfort: { movie_title: "이터널 선샤인", movie_reason: "이별과 기억을 껴안는 법을 보여주는 영화예요.", rating: 4.5 },
+      cheer: { movie_title: "브루클린", movie_reason: "이별 이후에도 삶은 계속된다는 걸 보여주는 영화예요.", rating: 4.3 } },
+    { keywords: ['고민','헷갈','선택','결정'],
+      reading: "오늘 당신의 운세는 답보다 질문이 더 중요한 시간이에요.",
+      comfort: { movie_title: "다가오는 것들", movie_reason: "정답 없는 삶을 담담히 받아들이는 태도를 보여주는 영화예요.", rating: 4.2 },
+      cheer: { movie_title: "빅 식", movie_reason: "고민조차 유머로 풀어내는 가벼움을 주는 영화예요.", rating: 4.2 } },
+    { keywords: ['후회','미련'],
+      reading: "오늘 당신의 운세엔 지나간 선택이 자꾸 떠오르고 있어요.",
+      comfort: { movie_title: "이터널 선샤인", movie_reason: "후회조차 사랑의 일부였다는 걸 보여주는 영화예요.", rating: 4.5 },
+      cheer: { movie_title: "브루클린", movie_reason: "후회를 딛고 다시 나아가는 용기를 보여주는 영화예요.", rating: 4.3 } },
+    { keywords: ['도전','시작','용기','새로운'],
+      reading: "오늘 당신의 운세는 새로운 문 앞에 서 있는 사람의 것이에요.",
+      comfort: { movie_title: "브루클린", movie_reason: "낯선 시작의 두려움과 용기를 함께 그린 영화예요.", rating: 4.3 },
+      cheer: { movie_title: "라라랜드", movie_reason: "꿈을 향한 도전을 뜨겁게 응원하는 영화예요.", rating: 4.6 } },
+    { keywords: ['변화','바꾸','이직','새출발'],
+      reading: "오늘 당신의 운세는 삶의 방향이 조금씩 바뀌는 시점이에요.",
+      comfort: { movie_title: "다가오는 것들", movie_reason: "삶의 전환점을 담담하게 받아들이는 법을 보여주는 영화예요.", rating: 4.2 },
+      cheer: { movie_title: "브루클린", movie_reason: "변화를 두려움이 아닌 설렘으로 바꿔주는 영화예요.", rating: 4.3 } },
+    { keywords: ['성장','배우는 중','자라'],
+      reading: "오늘 당신의 운세는 아프게 자라나는 중이라 말하고 있어요.",
+      comfort: { movie_title: "우리들", movie_reason: "성장통을 여리고 섬세하게 보듬어주는 영화예요.", rating: 4.3 },
+      cheer: { movie_title: "행복한 라짜로", movie_reason: "순수함을 잃지 않고 자라나는 법을 보여주는 영화예요.", rating: 4.2 } },
+    { keywords: ['자신없','위축','비교','초라'],
+      reading: "오늘 당신의 운세는 스스로를 너무 몰아세우고 있다고 말해요.",
+      comfort: { movie_title: "소공녀", movie_reason: "남과 비교하지 않고 나답게 사는 법을 보여주는 영화예요.", rating: 4.3 },
+      cheer: { movie_title: "행복한 라짜로", movie_reason: "있는 그대로도 충분하다는 걸 보여주는 영화예요.", rating: 4.2 } },
+    { keywords: ['뿌듯','성취','해냈','자랑스러'],
+      reading: "오늘 당신의 운세는 스스로를 칭찬해도 좋은 하루예요.",
+      comfort: { movie_title: "리틀 포레스트", movie_reason: "작은 성취들이 쌓여 만드는 충만함을 보여주는 영화예요.", rating: 4.4 },
+      cheer: { movie_title: "라라랜드", movie_reason: "꿈을 이뤄가는 벅찬 순간을 함께 느끼게 하는 영화예요.", rating: 4.6 } },
+    { keywords: ['지루','권태','똑같','반복'],
+      reading: "오늘 당신의 운세는 익숙함 속에 숨은 것을 다시 보라 말해요.",
+      comfort: { movie_title: "패터슨", movie_reason: "반복되는 일상 속 작은 의미를 발견하게 하는 영화예요.", rating: 4.3 },
+      cheer: { movie_title: "레이니 데이 인 뉴욕", movie_reason: "익숙한 도시도 낭만으로 다시 보게 하는 영화예요.", rating: 4.2 } },
+    { keywords: ['번아웃','소진','탈진'],
+      reading: "오늘 당신의 운세는 완전히 멈춰서 쉬어가라 말하고 있어요.",
+      comfort: { movie_title: "리틀 포레스트", movie_reason: "쉼이 곧 회복이라는 걸 보여주는 영화예요.", rating: 4.4 },
+      cheer: { movie_title: "빅 식", movie_reason: "무거운 마음을 가볍게 웃어넘기게 하는 영화예요.", rating: 4.2 } },
+    { keywords: ['회복','치유','나아지고','괜찮아지는'],
+      reading: "오늘 당신의 운세는 서서히 제자리를 찾아가는 중이에요.",
+      comfort: { movie_title: "리틀 포레스트", movie_reason: "느리지만 확실한 회복의 과정을 보여주는 영화예요.", rating: 4.4 },
+      cheer: { movie_title: "브루클린", movie_reason: "회복 이후 다시 나아가는 힘을 보여주는 영화예요.", rating: 4.3 } },
+    { keywords: ['평온','잔잔','고요','차분'],
+      reading: "오늘 당신의 운세는 고요한 물결처럼 흐르고 있어요.",
+      comfort: { movie_title: "패터슨", movie_reason: "잔잔한 일상 그 자체를 아름답게 그려낸 영화예요.", rating: 4.3 },
+      cheer: { movie_title: "레이니 데이 인 뉴욕", movie_reason: "평온함 속에서도 낭만을 즐기게 하는 영화예요.", rating: 4.2 } },
+    { keywords: ['옛날','어릴적','그시절'],
+      reading: "오늘 당신의 운세엔 지나간 시절의 온기가 스며 있어요.",
+      comfort: { movie_title: "화양연화", movie_reason: "지나간 시간의 정서를 가장 아름답게 담아낸 영화예요.", rating: 4.7 },
+      cheer: { movie_title: "콜 미 바이 유어 네임", movie_reason: "그 시절의 설렘을 다시 느끼게 하는 영화예요.", rating: 4.6 } },
+    { keywords: ['궁금','호기심','알고싶'],
+      reading: "오늘 당신의 운세는 낯선 것에 마음이 이끌리는 하루예요.",
+      comfort: { movie_title: "her", movie_reason: "새로운 관계와 존재에 대한 호기심을 담은 영화예요.", rating: 4.5 },
+      cheer: { movie_title: "행복한 라짜로", movie_reason: "세상에 대한 순수한 물음표를 던지는 영화예요.", rating: 4.2 } },
+    { keywords: ['터지고싶','폭발','미치겠','답답해서'],
+      reading: "오늘 당신의 운세는 무언가 시원하게 터뜨리고 싶어해요.",
+      comfort: { movie_title: "화차", movie_reason: "긴장감 속에서 억눌린 감정을 대신 풀어주는 영화예요.", rating: 4.1 },
+      cheer: { movie_title: "박쥐", movie_reason: "파괴적인 욕망을 거침없이 풀어내는 영화예요.", rating: 4.0 } },
+    { keywords: ['몽환','공상','꿈꾸는것','붕뜨는'],
+      reading: "오늘 당신의 운세는 현실과 꿈 사이 어딘가를 걷고 있어요.",
+      comfort: { movie_title: "행복한 라짜로", movie_reason: "몽환적이면서도 순수한 정서를 담은 영화예요.", rating: 4.2 },
+      cheer: { movie_title: "라라랜드", movie_reason: "꿈같은 순간들을 화려하게 펼쳐내는 영화예요.", rating: 4.6 } },
+    { keywords: ['관계','친구','가족','갈등','다툼'],
+      reading: "오늘 당신의 운세는 사람과 사람 사이의 거리를 돌아보게 해요.",
+      comfort: { movie_title: "우리들", movie_reason: "관계의 여림과 성장통을 섬세히 그려낸 영화예요.", rating: 4.3 },
+      cheer: { movie_title: "빅 식", movie_reason: "관계의 어려움도 유머로 풀어내는 영화예요.", rating: 4.2 } },
+    { keywords: ['자유롭고싶','떠나고싶','일탈','훌쩍'],
+      reading: "오늘 당신의 운세는 어딘가로 훌쩍 떠나고 싶어해요.",
+      comfort: { movie_title: "브루클린", movie_reason: "낯선 곳에서의 자유와 두려움을 함께 그린 영화예요.", rating: 4.3 },
+      cheer: { movie_title: "레이니 데이 인 뉴욕", movie_reason: "도시를 떠도는 낭만적 일탈을 보여주는 영화예요.", rating: 4.2 } },
+    { keywords: ['감사','따뜻','행복','다행'],
+      reading: "오늘 당신의 운세는 사소한 것에도 감사하게 되는 하루예요.",
+      comfort: { movie_title: "리틀 포레스트", movie_reason: "작은 것들에 대한 감사함을 담담히 그려낸 영화예요.", rating: 4.4 },
+      cheer: { movie_title: "빅 식", movie_reason: "따뜻한 유머로 마음을 채워주는 영화예요.", rating: 4.2 } }
+  ];
+
+  const FALLBACK_DEFAULT = {
+    reading: "오늘 당신의 운세는 아직 뚜렷한 색을 정하지 못한 채 흐르고 있어요.",
+    comfort: { movie_title: "패터슨", movie_reason: "특별할 것 없는 하루도 그 자체로 의미가 있다는 걸 보여주는 영화예요.", rating: 4.1 },
+    cheer: { movie_title: "빅 식", movie_reason: "잔잔한 하루에 산뜻한 웃음을 더해주는 영화예요.", rating: 4.2 }
+  };
+
+  function getCategoryEntry(text) {
+    let best = null, bestScore = 0;
+    FALLBACK_LIBRARY.forEach(entry => {
+      const score = entry.keywords.filter(k => text.includes(k)).length;
+      if (score > bestScore) { bestScore = score; best = entry; }
+    });
+    return best || FALLBACK_DEFAULT;
+  }
+
+  async function callClaudeJSONOnce(systemPrompt, userMessage) {
+    const response = await fetch("/api/claude", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{ role: "user", content: userMessage }]
+      })
+    });
+
+    if (!response.ok) {
+      const errBody = await response.text();
+      throw new Error('HTTP ' + response.status + ': ' + errBody.slice(0, 200));
+    }
+
+    const data = await response.json();
+    const textBlock = (data.content || []).find(b => b.type === 'text');
+    if (!textBlock) throw new Error('응답에 text 블록 없음: ' + JSON.stringify(data).slice(0, 200));
+
+    let cleaned = textBlock.text.replace(/```json|```/g, '').trim();
+    const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+    if (jsonMatch) cleaned = jsonMatch[0];
+
+    try {
+      return JSON.parse(cleaned);
+    } catch (parseErr) {
+      throw new Error('JSON 파싱 실패, 원문: ' + textBlock.text.slice(0, 150));
+    }
+  }
+
+  // 아티팩트↔API 프록시가 가끔 일시적으로 실패하는 경우가 있어,
+  // 로컬 폴백으로 내려가기 전에 한 번 더 자동으로 재시도한다.
+  async function callClaudeJSON(systemPrompt, userMessage) {
+    try {
+      return await callClaudeJSONOnce(systemPrompt, userMessage);
+    } catch (firstErr) {
+      console.warn('API 1차 호출 실패, 자동 재시도:', firstErr);
+      try {
+        return await callClaudeJSONOnce(systemPrompt, userMessage);
+      } catch (secondErr) {
+        console.warn('API 재시도도 실패, 이번엔 폴백으로 대체:', secondErr);
+        throw secondErr;
+      }
+    }
+  }
+
+  async function waitOutMinDisplay(startedAt, minMs) {
+    const elapsed = Date.now() - startedAt;
+    if (elapsed < minMs) await new Promise(r => setTimeout(r, minMs - elapsed));
+  }
+
+  function renderReadingBubble(readingText, methodLabel) {
+    const loadingRow = document.getElementById('loadingRow');
+    if (loadingRow) loadingRow.remove();
+
+    const row = document.createElement('div');
+    row.className = 'bubble-row';
+    row.innerHTML = `<div class="avatar">🔮</div><div class="bubble fortune-bubble"><span class="fortune-label">오늘의 ${methodLabel}</span></div>`;
+    row.querySelector('.bubble').appendChild(document.createTextNode(readingText));
+    chatLog.appendChild(row);
+    scrollToBottom();
+  }
+
+  async function getReadingStep(moodText, reasonText, method, companionText) {
+    const startedAt = addCardDrawBubble(method);
+    const combinedText = reasonText ? `${moodText} (이유: ${reasonText})` : moodText;
+    const entry = getCategoryEntry(combinedText);
+    const methodLabel = method === 'tarot' ? '타로' : '사주';
+
+    const systemPrompt = `당신은 "씬점술사"입니다. 사용자의 오늘 기분을 듣고 ${methodLabel} 스타일로 오늘의 기운을 한 문장으로 해석해주세요. 반드시 JSON만 응답: {"fortune": "${methodLabel} 스타일 해석 한 문장"}`;
+    const userMessage = `생년월일: ${userBirth || '알려주지 않음'}\n성별: ${userGender || '밝히지 않음'}\n오늘 기분: ${combinedText}\n분석 방식: ${methodLabel}\n함께 볼 사람: ${companionText || '알려주지 않음'}`;
+
+    let readingText;
+    try {
+      const parsed = await callClaudeJSON(systemPrompt, userMessage);
+      readingText = parsed.fortune || entry.reading;
+    } catch (err) {
+      console.warn('운세 API 호출 실패, 로컬 폴백으로 대체:', err);
+      readingText = entry.reading;
+    }
+
+    await waitOutMinDisplay(startedAt, 1200);
+    renderReadingBubble(readingText, methodLabel);
+
+    setTimeout(() => {
+      showDirectionQuestion(entry, companionText, moodText, reasonText, method);
+    }, 900);
+  }
+
+  async function getMovieStep(entry, variant, moodText, reasonText, method, companionText) {
+    lastMethod = method;
+    lastCompanionText = companionText || '';
+    const startedAt = addCardDrawBubble(null, '🎬 어울리는 영화를 고르고 있어요');
+    const combinedText = reasonText ? `${moodText} (이유: ${reasonText})` : moodText;
+    const methodLabel = method === 'tarot' ? '타로' : '사주';
+    const directionLabel = variant === 'cheer' ? '유쾌하고 힘이 되는' : '지친 마음을 위로하는';
+    const localMovie = entry[variant] || entry.comfort;
+
+    const systemPrompt = `당신은 "씬점술사"입니다. 사용자의 오늘 기분과 ${methodLabel} 해석을 바탕으로, 아래 영화 목록 중 ${directionLabel} 영화 한 편을 추천하세요. 사용자가 이 영화를 누구와 함께 볼지도 고려해서 추천 이유를 자연스럽게 녹여주세요.
+
+영화 목록: ${MOVIE_POOL.map(m => m.title).join(', ')}
+
+반드시 JSON만 응답: {"movie_title": "영화 제목", "movie_reason": "이유 한 문장", "rating": 4.5}`;
+    const userMessage = `생년월일: ${userBirth || '알려주지 않음'}\n성별: ${userGender || '밝히지 않음'}\n오늘 기분: ${combinedText}\n분석 방식: ${methodLabel}\n원하는 방향: ${directionLabel}\n함께 볼 사람: ${companionText || '알려주지 않음'}`;
+
+    let movieData;
+    try {
+      movieData = await callClaudeJSON(systemPrompt, userMessage);
+      if (!movieData.movie_title) throw new Error('movie_title 없음');
+    } catch (err) {
+      console.warn('영화 추천 API 호출 실패, 로컬 폴백으로 대체:', err);
+      movieData = localMovie;
+    }
+
+    await waitOutMinDisplay(startedAt, 1100);
+    renderMovieOnly(movieData, companionText);
+  }
+
+  let pendingMoodText = null;
+  let pendingCompanionContext = null;
+  let pendingMethodContext = null;
+  let pendingDirectionContext = null;
+  let activeChipRow = null;
+  let conversationEnded = false;
+  let lastMethod = 'saju';
+  let lastCompanionText = '';
+
+  function looksLikeRealModeFallback(text) {
+    const hasHangul = /[가-힣]/.test(text);
+    return hasHangul && text.replace(/\s/g, '').length >= 2;
+  }
+
+  function buildStageSystemPrompt(stageQuestion, nextQuestionHint, skipValidation) {
+    if (skipValidation) {
+      return `당신은 "씬점술사"라는 챗봇입니다. 방금 사용자에게 다음 질문을 했습니다: "${stageQuestion}" 사용자가 아래처럼 답했습니다.
+
+사용자가 말한 내용을 짧게 반영해서 자연스럽게 공감하거나 코멘트하는 한두 문장을 쓴 뒤, 자연스럽게 다음 질문("${nextQuestionHint}")으로 이어지는 대사를 만드세요. 씬점술사다운 다정하고 신비로운 말투를 쓰세요.
+
+반드시 JSON만 응답: {"line": "위 설명대로 작성한 대사"}`;
+    }
+    return `당신은 "씬점술사"라는 챗봇의 대화 흐름 관리자입니다. 방금 사용자에게 다음 질문을 했습니다: "${stageQuestion}"
+
+먼저 사용자의 답변이 이 질문에 대한 성실한 응답인지 판단하세요. 짧거나 모호해도 취지에 맞으면 valid, 질문과 무관한 다른 요청/명령이나 명백한 딴소리면 invalid로 판단하세요.
+
+그다음, valid라면 사용자가 말한 내용을 짧게 반영해서 자연스럽게 공감하거나 코멘트하는 한두 문장을 쓴 뒤, 자연스럽게 다음 질문("${nextQuestionHint}")으로 이어지는 대사를 만드세요. invalid라면 씬점술사 말투로 자연스럽게 다시 묻는 한 문장만 쓰세요. 둘 다 씬점술사다운 다정하고 신비로운 말투를 쓰세요.
+
+반드시 JSON만 응답: {"valid": true 또는 false, "line": "위 설명대로 작성한 대사"}`;
+  }
+
+  // 이번 답변을 검증하고(필요시), 그 내용을 반영한 다음 대사를 AI가 생성한다.
+  // 반환값: 유효하지 않아 진행을 멈춰야 하면 undefined, 진행 가능하면 다음 대사 문자열(또는 생성 실패시 null).
+  async function advanceStage(stageQuestion, answerText, nextQuestionHint, skipValidation) {
+    addBotLoadingBubble();
+    const systemPrompt = buildStageSystemPrompt(stageQuestion, nextQuestionHint, skipValidation);
+    const userMessage = `사용자 답변: "${answerText}"`;
+
+    let result;
+    try {
+      const parsed = await callClaudeJSON(systemPrompt, userMessage);
+      result = { valid: skipValidation ? true : !!parsed.valid, line: parsed.line || null };
+    } catch (err) {
+      console.warn('대화 흐름 생성 API 실패, 로컬 처리로 대체:', err);
+      result = { valid: skipValidation ? true : looksLikeRealModeFallback(answerText), line: null };
+    }
+
+    const loadingRow = document.getElementById('loadingRow');
+    if (loadingRow) loadingRow.remove();
+
+    if (!result.valid) {
+      showRetryBubble(result.line || '음... 아직 잘 못 읽었어요. 한 번만 더 편하게 말해줄래요?');
+      return undefined;
+    }
+    return result.line;
+  }
+
+  function showRetryBubble(message) {
+    const row = document.createElement('div');
+    row.className = 'bubble-row';
+    row.innerHTML = `<div class="avatar">🔮</div><div class="bubble"></div>`;
+    row.querySelector('.bubble').textContent = message || '음... 아직 잘 못 읽었어요. 한 번만 더 편하게 말해줄래요?';
+    chatLog.appendChild(row);
+    scrollToBottom();
+  }
+
+  function finalizeDepthCore(reasonText, dynamicLine) {
+    if (activeChipRow) { activeChipRow.remove(); activeChipRow = null; }
+    const moodText = pendingMoodText;
+    pendingMoodText = null;
+    showCompanionQuestion(moodText, reasonText, dynamicLine);
+  }
+
+  function finalizeCompanionCore(companionText, dynamicLine) {
+    if (activeChipRow) { activeChipRow.remove(); activeChipRow = null; }
+    const ctx = pendingCompanionContext;
+    pendingCompanionContext = null;
+    showMethodQuestion(ctx.moodText, ctx.reasonText, companionText, dynamicLine);
+  }
+
+  async function finalizeCompanionAnswer(companionText) {
+    addUserBubble(companionText);
+    const line = await advanceStage('오늘 이 영화, 누구와 함께 볼 것 같아요?', companionText, '운세로 볼지 타로로 볼지', true);
+    finalizeCompanionCore(companionText, line);
+  }
+
+  async function finalizeDepthAnswer(reasonText) {
+    addUserBubble(reasonText);
+    const line = await advanceStage('그 마음, 어디서 오는 것 같아요?', reasonText, '오늘 이 영화를 누구와 함께 볼 것 같은지', true);
+    finalizeDepthCore(reasonText, line);
+  }
+
+  function finalizeMethodCore(methodText, dynamicLine) {
+    if (activeChipRow) { activeChipRow.remove(); activeChipRow = null; }
+    const ctx = pendingMethodContext;
+    pendingMethodContext = null;
+    const method = methodText.includes('타로') ? 'tarot' : 'saju';
+    proceedToReveal(ctx.moodText, ctx.reasonText, method, ctx.companionText);
+  }
+
+  function finalizeMethodAnswer(methodText) {
+    addUserBubble(methodText);
+    finalizeMethodCore(methodText);
+  }
+
+  async function handleSend() {
+    const text = moodInput.value.trim();
+    if (!text) return;
+    moodInput.value = '';
+    moodInput.style.height = 'auto';
+    if (suggestRow) suggestRow.style.display = 'none';
+    sendBtn.disabled = true;
+
+    try {
+      if (conversationEnded) {
+        conversationEnded = false;
+        addUserBubble(text);
+        const entry = getCategoryEntry(text);
+        let variant = 'comfort';
+        if (text.includes('유쾌') || text.includes('힘') || text.includes('신나')) variant = 'cheer';
+        getMovieStep(entry, variant, text, '', lastMethod, lastCompanionText);
+        return;
+      }
+
+      if (pendingDirectionContext !== null) {
+        addUserBubble(text);
+        const line = await advanceStage('이제 영화를 추천해드릴까요? 위로하는 영화, 유쾌한 영화 중 골라도 되고 바로 추천해달라 해도 돼요.', text, '어떤 영화를 골라줄지', false);
+        if (line === undefined) return;
+        finalizeDirectionCore(text);
+        return;
+      }
+
+      if (pendingMethodContext !== null) {
+        addUserBubble(text);
+        const line = await advanceStage('운세로 봐드릴까요, 타로로 봐드릴까요?', text, '오늘의 운세나 타로 해석을 짚어보는 것', false);
+        if (line === undefined) return;
+        finalizeMethodCore(text, line);
+        return;
+      }
+
+      if (pendingCompanionContext !== null) {
+        addUserBubble(text);
+        const line = await advanceStage('오늘 이 영화, 누구와 함께 볼 것 같아요?', text, '운세로 볼지 타로로 볼지', false);
+        if (line === undefined) return;
+        finalizeCompanionCore(text, line);
+        return;
+      }
+
+      if (pendingMoodText !== null) {
+        addUserBubble(text);
+        const line = await advanceStage('그 마음, 어디서 오는 것 같아요?', text, '오늘 이 영화를 누구와 함께 볼 것 같은지', false);
+        if (line === undefined) return;
+        finalizeDepthCore(text, line);
+        return;
+      }
+
+      addUserBubble(text);
+      const line = await advanceStage('지금 마음은 어때요? 편하게, 있는 그대로 적어줘요.', text, '그 마음이 어디서 오는 것 같은지', false);
+      if (line === undefined) return;
+      showDepthQuestion(text, line);
+    } finally {
+      sendBtn.disabled = false;
+    }
+  }
+
+  function showDepthQuestion(moodText, dynamicLine) {
+    pendingMoodText = moodText;
+
+    const row = document.createElement('div');
+    row.className = 'bubble-row';
+    row.innerHTML = `<div class="avatar">🔮</div><div class="bubble"></div>`;
+    row.querySelector('.bubble').textContent = dynamicLine || '그 마음, 어디서 오는 것 같아요? 골라도 되고, 직접 적어도 돼요.';
+    chatLog.appendChild(row);
+
+    const chipRow = document.createElement('div');
+    chipRow.className = 'mood-options';
+    chipRow.style.marginLeft = '36px';
+    const options = ['관계 때문에', '내 안의 문제', '이유는 모르겠어', '그냥 오늘 하루가 그래'];
+    options.forEach(opt => {
+      const chip = document.createElement('div');
+      chip.className = 'mood-chip depth-chip';
+      chip.style.opacity = '1';
+      chip.style.cursor = 'pointer';
+      chip.textContent = opt;
+      chip.addEventListener('click', () => {
+        finalizeDepthAnswer(opt);
+      });
+      chipRow.appendChild(chip);
+    });
+    chatLog.appendChild(chipRow);
+    activeChipRow = chipRow;
+    scrollToBottom();
+  }
+
+  function showCompanionQuestion(moodText, reasonText, dynamicLine) {
+    pendingCompanionContext = { moodText, reasonText };
+
+    const row = document.createElement('div');
+    row.className = 'bubble-row';
+    row.innerHTML = `<div class="avatar">🔮</div><div class="bubble"></div>`;
+    row.querySelector('.bubble').textContent = dynamicLine || '오늘 이 영화, 누구와 함께 볼 것 같아요?';
+    chatLog.appendChild(row);
+
+    const chipRow = document.createElement('div');
+    chipRow.className = 'mood-options';
+    chipRow.style.marginLeft = '36px';
+    const options = ['혼자 볼래', '연인이랑', '친구랑', '가족이랑'];
+    options.forEach(opt => {
+      const chip = document.createElement('div');
+      chip.className = 'mood-chip depth-chip';
+      chip.style.opacity = '1';
+      chip.style.cursor = 'pointer';
+      chip.textContent = opt;
+      chip.addEventListener('click', () => {
+        finalizeCompanionAnswer(opt);
+      });
+      chipRow.appendChild(chip);
+    });
+    chatLog.appendChild(chipRow);
+    activeChipRow = chipRow;
+    scrollToBottom();
+  }
+
+  function showMethodQuestion(moodText, reasonText, companionText, dynamicLine) {
+    pendingMethodContext = { moodText, reasonText, companionText };
+
+    const row = document.createElement('div');
+    row.className = 'bubble-row';
+    row.innerHTML = `<div class="avatar">🔮</div><div class="bubble"></div>`;
+    row.querySelector('.bubble').textContent = dynamicLine || '이번엔 오늘의 운세로 짚어볼까요, 타로로 봐드릴까요?';
+    chatLog.appendChild(row);
+
+    const chipRow = document.createElement('div');
+    chipRow.className = 'mood-options';
+    chipRow.style.marginLeft = '36px';
+    const options = ['운세로 봐줘', '타로로 봐줘'];
+    options.forEach(opt => {
+      const chip = document.createElement('div');
+      chip.className = 'mood-chip depth-chip';
+      chip.style.opacity = '1';
+      chip.style.cursor = 'pointer';
+      chip.textContent = opt;
+      chip.addEventListener('click', () => {
+        finalizeMethodAnswer(opt);
+      });
+      chipRow.appendChild(chip);
+    });
+    chatLog.appendChild(chipRow);
+    activeChipRow = chipRow;
+    scrollToBottom();
+  }
+
+  function addCardDrawBubble(method, labelOverride) {
+    const row = document.createElement('div');
+    row.className = 'bubble-row';
+    row.id = 'loadingRow';
+    const label = labelOverride || (method === 'tarot' ? '🎴 카드를 뽑고 있어요' : '🔮 오늘의 운세를 짚어보고 있어요');
+    row.innerHTML = `
+      <div class="avatar">🔮</div>
+      <div class="bubble">${label}<span class="typing-dots"><span></span><span></span><span></span></span></div>
+    `;
+    chatLog.appendChild(row);
+    scrollToBottom();
+    return Date.now();
+  }
+
+  function proceedToReveal(moodText, reasonText, method, companionText) {
+    getReadingStep(moodText, reasonText, method, companionText);
+  }
+
+  function showDirectionQuestion(entry, companionText, moodText, reasonText, method) {
+    pendingDirectionContext = { entry, companionText, moodText, reasonText, method };
+
+    const row = document.createElement('div');
+    row.className = 'bubble-row';
+    row.innerHTML = `<div class="avatar">🔮</div><div class="bubble">이제 영화를 추천해드릴까요? 아니면 지친 마음을 위로하는 영화를 보여드릴까요? 아니면 힘이 되는 유쾌한 영화를 추천해드릴까요?</div>`;
+    chatLog.appendChild(row);
+
+    const chipRow = document.createElement('div');
+    chipRow.className = 'mood-options';
+    chipRow.style.marginLeft = '36px';
+    const options = ['바로 추천해줘', '위로하는 영화', '유쾌한 영화'];
+    options.forEach(opt => {
+      const chip = document.createElement('div');
+      chip.className = 'mood-chip depth-chip';
+      chip.style.opacity = '1';
+      chip.style.cursor = 'pointer';
+      chip.textContent = opt;
+      chip.addEventListener('click', () => {
+        finalizeDirectionAnswer(opt);
+      });
+      chipRow.appendChild(chip);
+    });
+    chatLog.appendChild(chipRow);
+    activeChipRow = chipRow;
+    scrollToBottom();
+  }
+
+  function finalizeDirectionCore(choiceText) {
+    if (activeChipRow) { activeChipRow.remove(); activeChipRow = null; }
+    const { entry, companionText, moodText, reasonText, method } = pendingDirectionContext;
+    pendingDirectionContext = null;
+
+    let variant = 'comfort';
+    if (choiceText.includes('유쾌') || choiceText.includes('힘')) variant = 'cheer';
+
+    getMovieStep(entry, variant, moodText, reasonText, method, companionText);
+  }
+
+  function finalizeDirectionAnswer(choiceText) {
+    addUserBubble(choiceText);
+    finalizeDirectionCore(choiceText);
+  }
+
+  const COMPANION_CLOSING = {
+    '혼자 볼래': '오늘의 씬, 온전히 혼자만의 시간에 스며들길 바라요. 내일 또 만나요.',
+    '연인이랑': '오늘의 씬, 두 사람 사이에 좋은 공기를 남겨주길 바라요. 내일 또 만나요.',
+    '친구랑': '오늘의 씬, 함께 웃고 떠들 이야깃거리가 되어주길 바라요. 내일 또 만나요.',
+    '가족이랑': '오늘의 씬, 오랜만에 다같이 마음 편한 시간이 되길 바라요. 내일 또 만나요.'
+  };
+
+  function renderMovieOnly(movieData, companionText) {
+    const loadingRow = document.getElementById('loadingRow');
+    if (loadingRow) loadingRow.remove();
+
+    const ratingNum = Number(movieData.rating) || 4;
+    const stars = '★'.repeat(Math.round(ratingNum)) + '☆'.repeat(5 - Math.round(ratingNum));
+
+    const resultRow = document.createElement('div');
+    resultRow.className = 'bubble-row';
+    resultRow.innerHTML = `
+      <div class="avatar">🔮</div>
+      <div class="result-card">
+        <div class="movie-title"></div>
+        <div class="stars">${stars} 예상 별점 ${ratingNum.toFixed(1)}</div>
+        <div class="reason"></div>
+      </div>
+    `;
+    resultRow.querySelector('.movie-title').textContent = movieData.movie_title || '';
+    resultRow.querySelector('.reason').textContent = movieData.movie_reason || '';
+    chatLog.appendChild(resultRow);
+    scrollToBottom();
+
+    setTimeout(() => {
+      const closingRow = document.createElement('div');
+      closingRow.className = 'bubble-row';
+      const closingText = COMPANION_CLOSING[companionText] || '오늘의 씬, 마음에 스며들길 바라요. 내일 또 만나요.';
+      closingRow.innerHTML = `<div class="avatar">🔮</div><div class="bubble"></div>`;
+      closingRow.querySelector('.bubble').textContent = closingText;
+      chatLog.appendChild(closingRow);
+      scrollToBottom();
+      conversationEnded = true;
+    }, 900);
+  }
+
+  sendBtn.addEventListener('click', handleSend);
+  moodInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  });
+  moodInput.addEventListener('input', () => {
+    moodInput.style.height = 'auto';
+    moodInput.style.height = Math.min(moodInput.scrollHeight, 120) + 'px';
+  });
+</script>
+
+<script>
+  document.querySelectorAll('.mini-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const input = document.getElementById('moodInput');
+      input.value = chip.dataset.text;
+      input.style.height = 'auto';
+      input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+      input.focus();
+    });
+  });
+</script>
+
+</body>
+</html>    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
   /* ---- header ---- */
   header {
     padding: 28px 24px 20px;
