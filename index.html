@@ -534,8 +534,8 @@
         <button class="gender-btn" data-gender="남성">남성</button>
         <button class="gender-btn" data-gender="밝히지 않음">밝히지 않음</button>
       </div>
-      <button class="cta" id="startBtn">시작하기</button>
-      <button class="skip" id="skipBtn">나중에 할게요</button>
+      <button class="cta" id="startBtn" disabled style="opacity:.4; cursor:not-allowed;">시작하기</button>
+      <p id="birthHint" style="font-size:11.5px; color:var(--ivory-dim); margin-top:10px;">생년월일을 입력해야 실제 사주 계산이 가능해요 (예: 2001.03.14)</p>
     </div>
 
     <div class="modal-loading" id="modalLoading">
@@ -609,9 +609,23 @@
   const modalForm = document.getElementById('modalForm');
   const modalLoading = document.getElementById('modalLoading');
   const startBtn = document.getElementById('startBtn');
-  const skipBtn = document.getElementById('skipBtn');
+  const birthInput = document.getElementById('birthInput');
   let userBirth = '';
   let userGender = '';
+
+  function isValidBirthInput(str) {
+    if (!str) return false;
+    return /^\d{4}\D+\d{1,2}\D+\d{1,2}$/.test(str.trim()) || /^\d{8}$/.test(str.trim());
+  }
+
+  function refreshStartBtn() {
+    const ok = isValidBirthInput(birthInput.value);
+    startBtn.disabled = !ok;
+    startBtn.style.opacity = ok ? '1' : '.4';
+    startBtn.style.cursor = ok ? 'pointer' : 'not-allowed';
+  }
+
+  birthInput.addEventListener('input', refreshStartBtn);
 
   document.querySelectorAll('.gender-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -622,7 +636,8 @@
   });
 
   function proceedToChat() {
-    userBirth = document.getElementById('birthInput').value.trim();
+    if (!isValidBirthInput(birthInput.value)) return;
+    userBirth = birthInput.value.trim();
     modalForm.style.display = 'none';
     modalLoading.style.display = 'flex';
     setTimeout(() => {
@@ -631,7 +646,6 @@
   }
 
   startBtn.addEventListener('click', proceedToChat);
-  skipBtn.addEventListener('click', proceedToChat);
 </script>
 
 <script>
