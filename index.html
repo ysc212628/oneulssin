@@ -750,7 +750,21 @@
 
   function isValidBirthInput(str) {
     if (!str) return false;
-    return /^\d{4}\D+\d{1,2}\D+\d{1,2}$/.test(str.trim()) || /^\d{8}$/.test(str.trim());
+    const s = str.trim();
+    let y, mo, d;
+    let m = s.match(/^(\d{4})\D+(\d{1,2})\D+(\d{1,2})$/);
+    if (m) {
+      y = +m[1]; mo = +m[2]; d = +m[3];
+    } else {
+      m = s.match(/^(\d{4})(\d{2})(\d{2})$/);
+      if (!m) return false;
+      y = +m[1]; mo = +m[2]; d = +m[3];
+    }
+    if (y < 1900 || y > 2026) return false;
+    if (mo < 1 || mo > 12) return false;
+    if (d < 1 || d > 31) return false;
+    const dt = new Date(y, mo - 1, d);
+    return dt.getFullYear() === y && dt.getMonth() === mo - 1 && dt.getDate() === d;
   }
 
   function refreshStartBtn() {
@@ -805,7 +819,10 @@
     if (!m) m = str.match(/^(\d{4})(\d{2})(\d{2})$/);
     if (!m) return null;
     const y = +m[1], mo = +m[2], d = +m[3];
+    if (y < 1900 || y > 2026) return null;
     if (mo < 1 || mo > 12 || d < 1 || d > 31) return null;
+    const dt = new Date(y, mo - 1, d);
+    if (dt.getFullYear() !== y || dt.getMonth() !== mo - 1 || dt.getDate() !== d) return null;
     return { y, m: mo, d };
   }
 
@@ -1290,7 +1307,11 @@
       ? `사용자가 직접 요청한 방향은 "${directionText}"예요. 이 요청을 최우선으로 반영해서, 실제로 존재하는 영화 중 이 요청에 정확히 맞는 영화 한 편을 추천하세요. (예: 장르, 분위기, 소재를 콕 집어 말했다면 그걸 그대로 따르세요. 절대 무난하고 잔잔한 영화로 뭉뚱그리지 마세요.)`
       : `사용자의 오늘 기분과 ${methodLabel} 해석을 바탕으로, 실제로 존재하는 영화 중 ${directionLabel} 영화 한 편을 추천하세요.`;
 
-    const systemPrompt = `당신은 "씬점술사"입니다. ${directionInstruction} 반드시 실제로 존재하는 영화만 추천하고, 제목과 내용을 지어내지 마세요. 사용자가 이 영화를 누구와 함께 볼지도 고려해서 추천 이유를 자연스럽게 녹여주세요.
+    const varietyInstruction = recentRecommendations.length
+      ? `아래는 이 사용자에게 이미 추천했던 영화들이에요. 절대 다시 추천하지 마세요: ${recentRecommendations.join(', ')}.`
+      : '';
+
+    const systemPrompt = `당신은 영화 추천 앱 "왓챠"에 익숙한 사용자를 상대하는 "씬점술사"입니다. 이 사용자는 왓챠에서도 비교적 마이너하고 취향이 뚜렷한 영화를 즐겨보는 편이라, 이미 대중적으로 너무 유명한 영화(흥행 대작, 챌린지성 유행작 등)는 이미 봤을 가능성이 높아요. ${directionInstruction} 매번 가장 먼저 떠오르는 뻔한 정답 대신, 후보를 여러 개 떠올려본 뒤 그중 상대적으로 덜 뻔하고 취향 저격일 만한 영화를 고르세요. ${varietyInstruction} 반드시 실제로 존재하는 영화만 추천하고, 제목과 내용을 지어내지 마세요. 사용자가 이 영화를 누구와 함께 볼지도 고려해서 추천 이유를 자연스럽게 녹여주세요.
 
 반드시 JSON만 응답: {"movie_title": "영화 제목", "movie_reason": "이 사람에게 이 영화를 추천하는 이유 두 문장", "rating": 4.5}`;
     const userMessage = `생년월일: ${userBirth || '알려주지 않음'}\n성별: ${userGender || '밝히지 않음'}\n오늘 기분: ${combinedText}\n분석 방식: ${methodLabel}\n원하는 방향: ${directionText || directionLabel}\n함께 볼 사람: ${companionText || '알려주지 않음'}`;
@@ -1299,6 +1320,8 @@
     try {
       movieData = await callClaudeJSON(systemPrompt, userMessage);
       if (!movieData.movie_title) throw new Error('movie_title 없음');
+      recentRecommendations.push(movieData.movie_title);
+      if (recentRecommendations.length > 8) recentRecommendations.shift();
     } catch (err) {
       console.warn('영화 추천 API 호출 실패, 로컬 폴백으로 대체:', err);
       movieData = localMovie;
@@ -1315,6 +1338,7 @@
   let conversationEnded = false;
   let lastMethod = 'saju';
   let lastCompanionText = '';
+  let recentRecommendations = [];
 
   function looksLikeRealModeFallback(text) {
     const hasHangul = /[가-힣]/.test(text);
