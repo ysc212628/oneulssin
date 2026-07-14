@@ -1224,7 +1224,7 @@
     }, 900);
   }
 
-  async function getMovieStep(entry, variant, moodText, reasonText, method, companionText) {
+  async function getMovieStep(entry, variant, moodText, reasonText, method, companionText, directionText) {
     lastMethod = method;
     lastCompanionText = companionText || '';
     const startedAt = addCardDrawBubble(null, '🎬 어울리는 영화를 고르고 있어요');
@@ -1233,12 +1233,14 @@
     const directionLabel = variant === 'cheer' ? '유쾌하고 힘이 되는' : '지친 마음을 위로하는';
     const localMovie = entry[variant] || entry.comfort;
 
-    const systemPrompt = `당신은 "씬점술사"입니다. 사용자의 오늘 기분과 ${methodLabel} 해석을 바탕으로, 아래 영화 목록 중 ${directionLabel} 영화 한 편을 추천하세요. 사용자가 이 영화를 누구와 함께 볼지도 고려해서 추천 이유를 자연스럽게 녹여주세요.
+    const directionInstruction = directionText
+      ? `사용자가 직접 요청한 방향은 "${directionText}"예요. 이 요청을 최우선으로 반영해서, 실제로 존재하는 영화 중 이 요청에 정확히 맞는 영화 한 편을 추천하세요. (예: 장르, 분위기, 소재를 콕 집어 말했다면 그걸 그대로 따르세요. 절대 무난하고 잔잔한 영화로 뭉뚱그리지 마세요.)`
+      : `사용자의 오늘 기분과 ${methodLabel} 해석을 바탕으로, 실제로 존재하는 영화 중 ${directionLabel} 영화 한 편을 추천하세요.`;
 
-영화 목록: ${MOVIE_POOL.map(m => m.title).join(', ')}
+    const systemPrompt = `당신은 "씬점술사"입니다. ${directionInstruction} 반드시 실제로 존재하는 영화만 추천하고, 제목과 내용을 지어내지 마세요. 사용자가 이 영화를 누구와 함께 볼지도 고려해서 추천 이유를 자연스럽게 녹여주세요.
 
-반드시 JSON만 응답: {"movie_title": "영화 제목", "movie_reason": "이유 한 문장", "rating": 4.5}`;
-    const userMessage = `생년월일: ${userBirth || '알려주지 않음'}\n성별: ${userGender || '밝히지 않음'}\n오늘 기분: ${combinedText}\n분석 방식: ${methodLabel}\n원하는 방향: ${directionLabel}\n함께 볼 사람: ${companionText || '알려주지 않음'}`;
+반드시 JSON만 응답: {"movie_title": "영화 제목", "movie_reason": "이 사람에게 이 영화를 추천하는 이유 두 문장", "rating": 4.5}`;
+    const userMessage = `생년월일: ${userBirth || '알려주지 않음'}\n성별: ${userGender || '밝히지 않음'}\n오늘 기분: ${combinedText}\n분석 방식: ${methodLabel}\n원하는 방향: ${directionText || directionLabel}\n함께 볼 사람: ${companionText || '알려주지 않음'}`;
 
     let movieData;
     try {
@@ -1359,7 +1361,7 @@
         const entry = getCategoryEntry(text);
         let variant = 'comfort';
         if (text.includes('유쾌') || text.includes('힘') || text.includes('신나')) variant = 'cheer';
-        getMovieStep(entry, variant, text, '', lastMethod, lastCompanionText);
+        getMovieStep(entry, variant, text, '', lastMethod, lastCompanionText, text);
         return;
       }
 
@@ -1605,7 +1607,10 @@
     let variant = 'comfort';
     if (choiceText.includes('유쾌') || choiceText.includes('힘')) variant = 'cheer';
 
-    getMovieStep(entry, variant, moodText, reasonText, method, companionText);
+    const isFreeform = !['바로 추천해줘', '위로하는 영화', '유쾌한 영화'].includes(choiceText.trim());
+    const directionText = isFreeform ? choiceText.trim() : '';
+
+    getMovieStep(entry, variant, moodText, reasonText, method, companionText, directionText);
   }
 
   function finalizeDirectionAnswer(choiceText) {
