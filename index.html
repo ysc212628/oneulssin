@@ -630,32 +630,6 @@
 </head>
 <body>
 
-<div id="debugPanel" style="position:fixed; top:8px; right:8px; z-index:9999; background:#111; border:1px solid #444; border-radius:8px; padding:8px 10px; font-size:12px; color:#eee; max-width:280px;">
-  <button id="debugTestBtn" style="width:100%; padding:6px; cursor:pointer;">API 연결 테스트 (이 파일 안에서)</button>
-  <div id="debugResult" style="margin-top:6px; white-space:pre-wrap; word-break:break-all; max-height:150px; overflow:auto;"></div>
-</div>
-<script>
-  document.getElementById('debugTestBtn').addEventListener('click', async () => {
-    const out = document.getElementById('debugResult');
-    out.textContent = '호출 중...';
-    try {
-      const response = await fetch("/api/claude", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-6",
-          max_tokens: 100,
-          messages: [{ role: "user", content: "안녕이라고만 답해줘" }]
-        })
-      });
-      const raw = await response.text();
-      out.textContent = 'HTTP ' + response.status + '\n' + raw.slice(0, 300);
-    } catch (err) {
-      out.textContent = 'fetch 자체 실패: ' + err.message;
-    }
-  });
-</script>
-
 <div class="overlay" id="onboardingOverlay">
   <div class="modal">
     <div class="mark"><span>🌙</span></div>
