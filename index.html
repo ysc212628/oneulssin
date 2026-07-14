@@ -603,6 +603,7 @@
 
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lunar-javascript/1.6.3/lunar.min.js"></script>
 <script>
   const overlay = document.getElementById('onboardingOverlay');
   const modalForm = document.getElementById('modalForm');
@@ -635,6 +636,83 @@
 
 <script>
   // 큐레이션 영화 리스트 — 실제 왓챠/외부 API 대신 직접 선별한 무드 태그 기반 리스트
+  // ---- 실제 사주(만세력) 계산 ----
+  const GAN_KR = {'甲':'갑','乙':'을','丙':'병','丁':'정','戊':'무','己':'기','庚':'경','辛':'신','壬':'임','癸':'계'};
+  const ZHI_KR = {'子':'자','丑':'축','寅':'인','卯':'묘','辰':'진','巳':'사','午':'오','未':'미','申':'신','酉':'유','戌':'술','亥':'해'};
+  const ZHI_ANIMAL = {'子':'쥐','丑':'소','寅':'호랑이','卯':'토끼','辰':'용','巳':'뱀','午':'말','未':'양','申':'원숭이','酉':'닭','戌':'개','亥':'돼지'};
+
+  function hanjaGanZhiToKorean(gz) {
+    if (!gz || gz.length < 2) return gz || '';
+    const gan = gz[0], zhi = gz[1];
+    const ganKr = GAN_KR[gan] || gan;
+    const zhiKr = ZHI_KR[zhi] || zhi;
+    const animal = ZHI_ANIMAL[zhi] || '';
+    return `${ganKr}${zhiKr}(${gan}${zhi}, ${animal}띠 기운)`;
+  }
+
+  function parseBirthDate(str) {
+    if (!str) return null;
+    let m = str.match(/(\d{4})\D+(\d{1,2})\D+(\d{1,2})/);
+    if (!m) m = str.match(/^(\d{4})(\d{2})(\d{2})$/);
+    if (!m) return null;
+    const y = +m[1], mo = +m[2], d = +m[3];
+    if (mo < 1 || mo > 12 || d < 1 || d > 31) return null;
+    return { y, m: mo, d };
+  }
+
+  function getPillarsFromYmd(y, m, d) {
+    try {
+      if (typeof Solar === 'undefined') return null;
+      const solar = Solar.fromYmd(y, m, d);
+      const ec = solar.getLunar().getEightChar();
+      return {
+        year: hanjaGanZhiToKorean(ec.getYear()),
+        month: hanjaGanZhiToKorean(ec.getMonth()),
+        day: hanjaGanZhiToKorean(ec.getDay())
+      };
+    } catch (e) {
+      console.warn('사주 계산 실패:', e);
+      return null;
+    }
+  }
+
+  function getTodayPillars() {
+    const now = new Date();
+    return getPillarsFromYmd(now.getFullYear(), now.getMonth() + 1, now.getDate());
+  }
+
+  // ---- 타로 22장 메이저 아르카나 ----
+  const TAROT_DECK = [
+    { kr: '바보', upright: '새로운 시작, 순수한 도전, 계산 없는 발걸음', reversed: '무모함, 준비 없는 출발, 방향을 잃음' },
+    { kr: '마법사', upright: '내 안의 자원을 모아 현실로 만들어내는 힘', reversed: '재능을 낭비함, 자신감 부족' },
+    { kr: '여사제', upright: '직관, 고요한 통찰, 말하지 않아도 아는 마음', reversed: '억눌린 직감, 혼란스러운 내면' },
+    { kr: '여황제', upright: '풍요, 돌봄, 감정이 자라나는 시기', reversed: '과잉보호, 정체된 성장' },
+    { kr: '황제', upright: '안정, 질서, 스스로 세운 원칙의 힘', reversed: '경직됨, 통제하려는 마음' },
+    { kr: '교황', upright: '전통적인 지혜, 배움, 누군가에게 기대고 싶은 마음', reversed: '틀에서 벗어나고 싶은 반항심' },
+    { kr: '연인', upright: '진심의 연결, 선택의 갈림길, 마음이 이끄는 방향', reversed: '갈등, 엇갈리는 마음' },
+    { kr: '전차', upright: '의지로 밀고 나가는 추진력, 방향을 잡은 확신', reversed: '통제력을 잃음, 방향 없는 질주' },
+    { kr: '힘', upright: '부드럽지만 단단한 내면의 용기', reversed: '자기 의심, 소진된 에너지' },
+    { kr: '은둔자', upright: '혼자만의 시간이 필요한 순간, 내면을 향한 탐구', reversed: '고립감, 지나친 자기 침잠' },
+    { kr: '운명의 수레바퀴', upright: '흐름이 바뀌는 전환점, 예상 밖의 기회', reversed: '반복되는 패턴, 흐름에 저항함' },
+    { kr: '정의', upright: '균형을 찾으려는 마음, 있는 그대로 보는 눈', reversed: '치우친 판단, 불공평하다는 느낌' },
+    { kr: '매달린 사람', upright: '멈춰서야 보이는 것들, 다른 시선으로 바라보기', reversed: '의미 없는 정체, 희생만 하는 기분' },
+    { kr: '죽음', upright: '끝나야 시작되는 것, 완전히 다른 국면으로의 전환', reversed: '변화를 거부함, 놓지 못하는 마음' },
+    { kr: '절제', upright: '조화, 서두르지 않고 맞춰가는 균형감', reversed: '불균형, 극단으로 치우침' },
+    { kr: '악마', upright: '벗어나기 힘든 집착이나 습관을 직면함', reversed: '속박에서 벗어나기 시작함' },
+    { kr: '탑', upright: '갑작스러운 붕괴, 그러나 그 뒤에 오는 진짜 기반', reversed: '다가올 변화를 피하고만 있음' },
+    { kr: '별', upright: '희망, 회복하는 마음, 다시 믿어보고 싶은 순간', reversed: '희미해진 희망, 지친 믿음' },
+    { kr: '달', upright: '불확실함 속의 감정, 뚜렷하지 않은 불안', reversed: '혼란이 걷히고 진실이 보이기 시작함' },
+    { kr: '태양', upright: '순수한 기쁨, 있는 그대로 빛나는 자신', reversed: '가려진 기쁨, 과장된 밝음' },
+    { kr: '심판', upright: '지난 시간을 돌아보고 새로운 국면을 받아들임', reversed: '자기 자신을 너무 가혹하게 평가함' },
+    { kr: '세계', upright: '한 단계의 완성, 스스로 이뤄낸 매듭', reversed: '마무리 짓지 못한 채 남은 미련' }
+  ];
+
+  function drawTarotCard() {
+    const card = TAROT_DECK[Math.floor(Math.random() * TAROT_DECK.length)];
+    const reversed = Math.random() < 0.5;
+    return { ...card, reversed, meaning: reversed ? card.reversed : card.upright };
+  }
+
   const MOVIE_POOL = [
     { title: "화양연화", tags: "그리움, 억눌린 감정, 아련함, 어른의 사랑" },
     { title: "이터널 선샤인", tags: "상실, 기억, 후회, 그래도 다시 사랑" },
@@ -910,14 +988,32 @@
     scrollToBottom();
   }
 
-  async function getReadingStep(moodText, reasonText, method, companionText) {
+  async function getReadingStep(moodText, reasonText, method, companionText, drawnCard) {
     const startedAt = addCardDrawBubble(method);
     const combinedText = reasonText ? `${moodText} (이유: ${reasonText})` : moodText;
     const entry = getCategoryEntry(combinedText);
     const methodLabel = method === 'tarot' ? '타로' : '사주';
+    const todayStr = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
 
-    const systemPrompt = `당신은 "씬점술사"입니다. 사용자의 오늘 기분을 듣고 ${methodLabel} 스타일로 오늘의 기운을 한 문장으로 해석해주세요. 반드시 JSON만 응답: {"fortune": "${methodLabel} 스타일 해석 한 문장"}`;
-    const userMessage = `생년월일: ${userBirth || '알려주지 않음'}\n성별: ${userGender || '밝히지 않음'}\n오늘 기분: ${combinedText}\n분석 방식: ${methodLabel}\n함께 볼 사람: ${companionText || '알려주지 않음'}`;
+    let contextBlock;
+    let systemPrompt;
+    if (method === 'tarot' && drawnCard) {
+      const orientLabel = drawnCard.reversed ? '역방향' : '정방향';
+      contextBlock = `[실제로 뽑힌 타로 카드] ${drawnCard.kr} (${orientLabel})\n[카드 의미] ${drawnCard.meaning}`;
+      systemPrompt = `당신은 "씬점술사"입니다. 아래는 사용자가 방금 실제로 뽑은 타로 카드입니다. 이 카드 이름과 방향, 의미를 반드시 근거로 삼아서, 사용자의 오늘 기분과 연결지어 오늘의 기운을 한 문장으로 해석해주세요. 카드에 없는 내용을 지어내지 마세요. 반드시 JSON만 응답: {"fortune": "해석 한 문장"}`;
+    } else {
+      const parsedBirth = parseBirthDate(userBirth);
+      const pillars = parsedBirth ? getPillarsFromYmd(parsedBirth.y, parsedBirth.m, parsedBirth.d) : null;
+      const today = getTodayPillars();
+      if (pillars) {
+        contextBlock = `[실제 사주 명식] 연주 ${pillars.year} · 월주 ${pillars.month} · 일주 ${pillars.day}\n[오늘(${todayStr})의 일진] ${today ? today.day : '계산 불가'}`;
+      } else {
+        contextBlock = `[생년월일 미입력 또는 인식 불가로 개인 명식 계산 불가]\n[오늘(${todayStr})의 일진] ${today ? today.day : '계산 불가'}`;
+      }
+      systemPrompt = `당신은 "씬점술사"입니다. 아래는 실제 만세력 계산으로 나온 사주 명식과 오늘의 일진입니다. 이 데이터에 있는 간지를 반드시 근거로 삼아 자연스럽게 언급하며, 사용자의 오늘 기분과 연결지어 오늘(${todayStr})의 기운을 한 문장으로 해석해주세요. 데이터에 없는 정보를 지어내지 마세요. 반드시 JSON만 응답: {"fortune": "${methodLabel} 스타일 해석 한 문장"}`;
+    }
+
+    const userMessage = `${contextBlock}\n오늘 날짜: ${todayStr}\n생년월일: ${userBirth || '알려주지 않음'}\n성별: ${userGender || '밝히지 않음'}\n오늘 기분: ${combinedText}\n분석 방식: ${methodLabel}\n함께 볼 사람: ${companionText || '알려주지 않음'}`;
 
     let readingText;
     try {
@@ -1232,7 +1328,49 @@
   }
 
   function proceedToReveal(moodText, reasonText, method, companionText) {
-    getReadingStep(moodText, reasonText, method, companionText);
+    if (method === 'tarot') {
+      showTarotDraw(moodText, reasonText, companionText);
+    } else {
+      getReadingStep(moodText, reasonText, method, companionText, null);
+    }
+  }
+
+  function showTarotDraw(moodText, reasonText, companionText) {
+    const row = document.createElement('div');
+    row.className = 'bubble-row';
+    row.innerHTML = `<div class="avatar">🔮</div><div class="bubble">카드 세 장을 펼쳤어요. 마음이 가는 카드 한 장을 골라줘요.</div>`;
+    chatLog.appendChild(row);
+
+    const cardRow = document.createElement('div');
+    cardRow.className = 'mood-options';
+    cardRow.style.marginLeft = '36px';
+    ['🎴 첫 번째 카드', '🎴 두 번째 카드', '🎴 세 번째 카드'].forEach(label => {
+      const chip = document.createElement('div');
+      chip.className = 'mood-chip depth-chip';
+      chip.style.opacity = '1';
+      chip.style.cursor = 'pointer';
+      chip.textContent = label;
+      chip.addEventListener('click', () => {
+        cardRow.remove();
+        const drawn = drawTarotCard();
+        revealTarotCard(drawn);
+        getReadingStep(moodText, reasonText, 'tarot', companionText, drawn);
+      });
+      cardRow.appendChild(chip);
+    });
+    chatLog.appendChild(cardRow);
+    activeChipRow = cardRow;
+    scrollToBottom();
+  }
+
+  function revealTarotCard(drawn) {
+    if (activeChipRow) { activeChipRow = null; }
+    const row = document.createElement('div');
+    row.className = 'bubble-row';
+    const orientLabel = drawn.reversed ? '역방향' : '정방향';
+    row.innerHTML = `<div class="avatar">🔮</div><div class="bubble">✨ <b>${drawn.kr}</b> · ${orientLabel} 카드가 나왔어요.<br><span style="opacity:.75;font-size:12.5px">${drawn.meaning}</span></div>`;
+    chatLog.appendChild(row);
+    scrollToBottom();
   }
 
   function showDirectionQuestion(entry, companionText, moodText, reasonText, method) {
