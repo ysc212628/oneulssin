@@ -1311,10 +1311,14 @@
       ? `아래는 이 사용자에게 이미 추천했던 영화들이에요. 절대 다시 추천하지 마세요: ${recentRecommendations.join(', ')}.`
       : '';
 
-    const systemPrompt = `당신은 영화 추천 앱 "왓챠"에 익숙한 사용자를 상대하는 "씬점술사"입니다. 이 사용자는 왓챠에서도 비교적 마이너하고 취향이 뚜렷한 영화를 즐겨보는 편이라, 이미 대중적으로 너무 유명한 영화(흥행 대작, 챌린지성 유행작 등)는 이미 봤을 가능성이 높아요. ${directionInstruction} 매번 가장 먼저 떠오르는 뻔한 정답 대신, 후보를 여러 개 떠올려본 뒤 그중 상대적으로 덜 뻔하고 취향 저격일 만한 영화를 고르세요. ${varietyInstruction} 반드시 실제로 존재하는 영화만 추천하고, 제목과 내용을 지어내지 마세요. 사용자가 이 영화를 누구와 함께 볼지도 고려해서 추천 이유를 자연스럽게 녹여주세요.
+    const readingInstruction = lastReadingContext
+      ? `참고로 방금 이 사용자에게 나온 ${methodLabel} 해석 결과는 다음과 같아요: "${lastReadingContext}" 이 영화 추천은 사용자가 원하는 방향/기분과, 이 ${methodLabel} 해석이 암시하는 뉘앙스(경고성이면 경고성 요소를, 긍정적이면 긍정적 요소를)를 반드시 둘 다 만족해야 해요. 둘 중 하나만 반영하고 다른 하나를 무시하지 마세요.`
+      : '';
+
+    const systemPrompt = `당신은 영화 추천 앱 "왓챠"에 익숙한 사용자를 상대하는 "씬점술사"입니다. 이 사용자는 왓챠에서도 비교적 마이너하고 취향이 뚜렷한 영화를 즐겨보는 편이라, 이미 대중적으로 너무 유명한 영화(흥행 대작, 챌린지성 유행작 등)는 이미 봤을 가능성이 높아요. ${directionInstruction} ${readingInstruction} 매번 가장 먼저 떠오르는 뻔한 정답 대신, 후보를 여러 개 떠올려본 뒤 그중 상대적으로 덜 뻔하고 취향 저격일 만한 영화를 고르세요. ${varietyInstruction} 반드시 실제로 존재하는 영화만 추천하고, 제목과 내용을 지어내지 마세요. 사용자가 이 영화를 누구와 함께 볼지도 고려해서 추천 이유를 자연스럽게 녹여주세요.
 
 반드시 JSON만 응답: {"movie_title": "영화 제목", "movie_reason": "이 사람에게 이 영화를 추천하는 이유 두 문장", "rating": 4.5}`;
-    const userMessage = `생년월일: ${userBirth || '알려주지 않음'}\n성별: ${userGender || '밝히지 않음'}\n오늘 기분: ${combinedText}\n분석 방식: ${methodLabel}\n원하는 방향: ${directionText || directionLabel}\n함께 볼 사람: ${companionText || '알려주지 않음'}`;
+    const userMessage = `생년월일: ${userBirth || '알려주지 않음'}\n성별: ${userGender || '밝히지 않음'}\n오늘 기분: ${combinedText}\n분석 방식: ${methodLabel}\n${methodLabel} 해석 결과: ${lastReadingContext || '없음'}\n원하는 방향: ${directionText || directionLabel}\n함께 볼 사람: ${companionText || '알려주지 않음'}`;
 
     let movieData;
     try {
@@ -1339,6 +1343,9 @@
   let lastMethod = 'saju';
   let lastCompanionText = '';
   let recentRecommendations = [];
+  let lastMoodText = '';
+  let lastReasonText = '';
+  let lastReadingContext = '';
 
   function looksLikeRealModeFallback(text) {
     const hasHangul = /[가-힣]/.test(text);
@@ -1401,6 +1408,8 @@
     if (activeChipRow) { activeChipRow.remove(); activeChipRow = null; }
     const moodText = pendingMoodText;
     pendingMoodText = null;
+    lastMoodText = moodText;
+    lastReasonText = reasonText;
     runSajuReading(moodText, reasonText);
   }
 
@@ -1435,6 +1444,14 @@
       if (conversationEnded) {
         conversationEnded = false;
         addUserBubble(text);
+
+        const wantsTarot = /타로|카드/.test(text);
+        const wantsRandomFortune = !wantsTarot && /운세/.test(text);
+        if (wantsTarot || wantsRandomFortune) {
+          proceedToReveal(lastMoodText, lastReasonText, wantsTarot ? 'tarot' : 'saju', lastCompanionText);
+          return;
+        }
+
         const entry = getCategoryEntry(text);
         let variant = 'comfort';
         if (text.includes('유쾌') || text.includes('힘') || text.includes('신나')) variant = 'cheer';
@@ -1558,6 +1575,7 @@
   async function showRandomMoodReveal(moodText, reasonText, companionText) {
     const startedAt = addCardDrawBubble(null, '🎲 오늘의 기운을 뽑고 있어요');
     const line = drawRandomMoodLine();
+    lastReadingContext = `오늘의 랜덤 운세: ${line}`;
     await waitOutMinDisplay(startedAt, 700);
     renderReadingBubble(line, '랜덤 운세');
     setTimeout(() => {
@@ -1640,6 +1658,7 @@
 
     await waitOutMinDisplay(startedAt, 900);
     renderReadingBubble(readingText, '타로');
+    lastReadingContext = `뽑힌 타로 카드: ${drawn.kr}(${orientLabel}) - ${String(readingText).replace(/\n+/g, ' ')}`;
 
     setTimeout(() => {
       const combinedText = reasonText ? `${moodText} (이유: ${reasonText})` : moodText;
