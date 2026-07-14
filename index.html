@@ -339,6 +339,45 @@
     max-width: 88%;
   }
 
+  .result-card.with-poster {
+    display: flex;
+    gap: 14px;
+    padding: 14px;
+  }
+
+  .result-card .poster-wrap {
+    flex-shrink: 0;
+    width: 92px;
+  }
+
+  .result-card .poster-img {
+    width: 92px;
+    height: 138px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--surface-2);
+  }
+
+  .result-card .poster-skeleton {
+    width: 92px;
+    height: 138px;
+    border-radius: 8px;
+    background: linear-gradient(100deg, var(--surface-2) 30%, #ffffff10 50%, var(--surface-2) 70%);
+    background-size: 200% 100%;
+    animation: posterShimmer 1.3s infinite;
+  }
+
+  @keyframes posterShimmer {
+    0% { background-position: 150% 0; }
+    100% { background-position: -50% 0; }
+  }
+
+  .result-card .movie-body {
+    flex: 1;
+    min-width: 0;
+  }
+
   .result-card .movie-title {
     font-family: 'Pretendard', sans-serif;
     font-weight: 800;
@@ -347,11 +386,25 @@
     margin-bottom: 6px;
   }
 
+  .result-card .movie-meta {
+    font-size: 11.5px;
+    color: var(--ivory-dim);
+    margin-bottom: 8px;
+  }
+
   .result-card .stars {
     color: var(--pink);
     font-size: 13px;
     margin-bottom: 10px;
     letter-spacing: 1px;
+  }
+
+  .result-card .overview {
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--ivory-dim);
+    margin-bottom: 10px;
+    opacity: 0.85;
   }
 
   .result-card .reason {
@@ -1625,26 +1678,75 @@
     '가족이랑': '오늘의 씬, 오랜만에 다같이 마음 편한 시간이 되길 바라요. 내일 또 만나요.'
   };
 
-  function renderMovieOnly(movieData, companionText) {
+  async function fetchTmdbInfo(title) {
+    if (!title) return null;
+    try {
+      const res = await fetch(`/api/tmdb?title=${encodeURIComponent(title)}`);
+      if (!res.ok) return null;
+      const data = await res.json();
+      if (data.error) return null;
+      return data;
+    } catch (e) {
+      console.warn('TMDB 조회 실패:', e);
+      return null;
+    }
+  }
+
+  async function renderMovieOnly(movieData, companionText) {
     const loadingRow = document.getElementById('loadingRow');
     if (loadingRow) loadingRow.remove();
 
     const ratingNum = Number(movieData.rating) || 4;
-    const stars = '★'.repeat(Math.round(ratingNum)) + '☆'.repeat(5 - Math.round(ratingNum));
 
     const resultRow = document.createElement('div');
     resultRow.className = 'bubble-row';
     resultRow.innerHTML = `
       <div class="avatar">🔮</div>
-      <div class="result-card">
-        <div class="movie-title"></div>
-        <div class="stars">${stars} 예상 별점 ${ratingNum.toFixed(1)}</div>
-        <div class="reason"></div>
+      <div class="result-card with-poster">
+        <div class="poster-wrap"><div class="poster-skeleton"></div></div>
+        <div class="movie-body">
+          <div class="movie-title"></div>
+          <div class="movie-meta"></div>
+          <div class="stars">평점 불러오는 중...</div>
+          <div class="overview" style="display:none;"></div>
+          <div class="reason"></div>
+        </div>
       </div>
     `;
     resultRow.querySelector('.movie-title').textContent = movieData.movie_title || '';
     resultRow.querySelector('.reason').textContent = movieData.movie_reason || '';
     chatLog.appendChild(resultRow);
+    scrollToBottom();
+
+    const tmdb = await fetchTmdbInfo(movieData.movie_title || '');
+    const posterWrap = resultRow.querySelector('.poster-wrap');
+    const metaEl = resultRow.querySelector('.movie-meta');
+    const starsEl = resultRow.querySelector('.stars');
+    const overviewEl = resultRow.querySelector('.overview');
+
+    if (tmdb && tmdb.poster_url) {
+      posterWrap.innerHTML = `<img class="poster-img" src="${tmdb.poster_url}" alt="${(tmdb.title || movieData.movie_title || '').replace(/"/g, '')} 포스터">`;
+    } else {
+      posterWrap.innerHTML = `<div class="poster-skeleton" style="animation:none; display:flex; align-items:center; justify-content:center; font-size:24px;">🎬</div>`;
+    }
+
+    if (tmdb) {
+      const year = tmdb.release_date ? tmdb.release_date.slice(0, 4) : '';
+      metaEl.textContent = year ? `${year}년 개봉` : '';
+      if (typeof tmdb.vote_average === 'number' && tmdb.vote_average > 0) {
+        const fiveScale = tmdb.vote_average / 2;
+        const stars = '★'.repeat(Math.round(fiveScale)) + '☆'.repeat(5 - Math.round(fiveScale));
+        starsEl.textContent = `${stars} 실제 평점 ${tmdb.vote_average.toFixed(1)} / 10 (TMDB)`;
+      } else {
+        starsEl.textContent = `예상 별점 ${ratingNum.toFixed(1)} / 5 (AI 추정)`;
+      }
+      if (tmdb.overview) {
+        overviewEl.textContent = tmdb.overview;
+        overviewEl.style.display = 'block';
+      }
+    } else {
+      starsEl.textContent = `예상 별점 ${ratingNum.toFixed(1)} / 5 (AI 추정, 실제 정보 조회 실패)`;
+    }
     scrollToBottom();
 
     setTimeout(() => {
