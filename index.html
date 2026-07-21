@@ -4,6 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>오늘의 씬</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6PKTDBFBBS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-6PKTDBFBBS');
+  function trackEvent(name, params) {
+    try {
+      if (typeof gtag === 'function') gtag('event', name, params || {});
+    } catch (e) { /* GA 차단 등은 무시 */ }
+  }
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
@@ -413,6 +425,41 @@
     color: var(--ivory-dim);
   }
 
+  .feedback-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+  }
+
+  .feedback-label {
+    font-size: 11.5px;
+    color: var(--ivory-dim);
+    flex: 1;
+  }
+
+  .feedback-btn {
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 4px 9px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+
+  .feedback-btn:hover:not(:disabled) {
+    border-color: var(--pink-soft);
+    transform: translateY(-1px);
+  }
+
+  .feedback-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
   .error-text {
     color: var(--pink);
     font-size: 12.5px;
@@ -761,6 +808,7 @@
   function proceedToChat() {
     if (!isValidBirthInput(birthInput.value)) return;
     userBirth = birthInput.value.trim();
+    trackEvent('onboarding_complete');
     modalForm.style.display = 'none';
     modalLoading.style.display = 'flex';
     setTimeout(() => {
@@ -1262,6 +1310,7 @@
 
     await waitOutMinDisplay(startedAt, 1300);
     renderReadingBubble(readingText, '사주');
+    trackEvent('saju_reading_shown');
 
     setTimeout(() => {
       showMethodQuestion(moodText, reasonText);
@@ -1384,6 +1433,7 @@
     pendingMoodText = null;
     lastMoodText = moodText;
     lastReasonText = reasonText;
+    trackEvent('mood_submitted');
     runSajuReading(moodText, reasonText);
   }
 
@@ -1398,6 +1448,7 @@
     const ctx = pendingMethodContext;
     pendingMethodContext = null;
     const method = methodText.includes('타로') ? 'tarot' : 'saju';
+    trackEvent('method_chosen', { method: method });
     proceedToReveal(ctx.moodText, ctx.reasonText, method, '');
   }
 
@@ -1742,6 +1793,11 @@
           <div class="stars">평점 불러오는 중...</div>
           <div class="overview" style="display:none;"></div>
           <div class="reason"></div>
+          <div class="feedback-row">
+            <span class="feedback-label">이 추천 어땠어요?</span>
+            <button type="button" class="feedback-btn" data-value="up">👍</button>
+            <button type="button" class="feedback-btn" data-value="down">👎</button>
+          </div>
         </div>
       </div>
     `;
@@ -1749,6 +1805,17 @@
     resultRow.querySelector('.reason').textContent = movieData.movie_reason || '';
     chatLog.appendChild(resultRow);
     scrollToBottom();
+    trackEvent('movie_recommended', { movie_title: movieData.movie_title || '' });
+
+    const feedbackRow = resultRow.querySelector('.feedback-row');
+    feedbackRow.querySelectorAll('.feedback-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const value = btn.dataset.value;
+        trackEvent('feedback_given', { value: value, movie_title: movieData.movie_title || '' });
+        feedbackRow.querySelectorAll('.feedback-btn').forEach(b => b.disabled = true);
+        feedbackRow.querySelector('.feedback-label').textContent = value === 'up' ? '고마워요! 다음에 더 잘 맞춰볼게요 :)' : '아쉬웠다면 알려줘서 고마워요, 더 다듬어볼게요.';
+      });
+    });
 
     const tmdb = await fetchTmdbInfo(movieData.movie_title || '');
     const posterWrap = resultRow.querySelector('.poster-wrap');
