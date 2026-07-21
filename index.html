@@ -427,15 +427,21 @@
 
   .feedback-row {
     display: flex;
-    align-items: center;
-    gap: 8px;
+    flex-direction: column;
+    gap: 10px;
     margin-top: 12px;
-    padding-top: 10px;
+    padding-top: 12px;
     border-top: 1px solid var(--line);
   }
 
+  .feedback-prompt {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
   .feedback-label {
-    font-size: 11.5px;
+    font-size: 12.5px;
     color: var(--ivory-dim);
     flex: 1;
   }
@@ -443,19 +449,120 @@
   .feedback-btn {
     background: var(--surface-2);
     border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 4px 9px;
-    font-size: 13px;
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 22px;
+    line-height: 1;
     cursor: pointer;
     transition: transform 0.15s ease, border-color 0.15s ease;
   }
 
   .feedback-btn:hover:not(:disabled) {
     border-color: var(--pink-soft);
-    transform: translateY(-1px);
+    transform: translateY(-2px) scale(1.05);
   }
 
   .feedback-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+    transform: none;
+  }
+
+  .feedback-comment textarea {
+    width: 100%;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--ivory);
+    font-family: inherit;
+    font-size: 12.5px;
+    padding: 8px 10px;
+    resize: none;
+    min-height: 44px;
+  }
+
+  .feedback-comment textarea:focus {
+    outline: none;
+    border-color: var(--pink-soft);
+  }
+
+  .feedback-comment-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    justify-content: flex-end;
+  }
+
+  .feedback-comment-actions button {
+    font-size: 11.5px;
+    padding: 6px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ivory-dim);
+  }
+
+  .feedback-comment-actions .submit-btn {
+    background: var(--pink);
+    border-color: var(--pink);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .survey-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .survey-item .survey-q {
+    font-size: 12px;
+    color: var(--ivory-dim);
+    flex: 1;
+    line-height: 1.4;
+  }
+
+  .survey-stars {
+    display: flex;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+
+  .survey-star {
+    font-size: 17px;
+    cursor: pointer;
+    color: var(--line);
+    transition: color 0.1s ease, transform 0.1s ease;
+  }
+
+  .survey-star.filled {
+    color: var(--pink);
+  }
+
+  .survey-star:hover {
+    transform: scale(1.15);
+  }
+
+  .survey-submit-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2px;
+  }
+
+  .survey-submit-row button {
+    font-size: 11.5px;
+    padding: 6px 14px;
+    border-radius: 7px;
+    cursor: pointer;
+    border: none;
+    background: var(--pink);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .survey-submit-row button:disabled {
     opacity: 0.4;
     cursor: default;
   }
@@ -1794,9 +1901,11 @@
           <div class="overview" style="display:none;"></div>
           <div class="reason"></div>
           <div class="feedback-row">
-            <span class="feedback-label">이 추천 어땠어요?</span>
-            <button type="button" class="feedback-btn" data-value="up">👍</button>
-            <button type="button" class="feedback-btn" data-value="down">👎</button>
+            <div class="feedback-prompt">
+              <span class="feedback-label">이 추천 어땠어요?</span>
+              <button type="button" class="feedback-btn" data-value="up">👍</button>
+              <button type="button" class="feedback-btn" data-value="down">👎</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1808,12 +1917,81 @@
     trackEvent('movie_recommended', { movie_title: movieData.movie_title || '' });
 
     const feedbackRow = resultRow.querySelector('.feedback-row');
+    const promptEl = feedbackRow.querySelector('.feedback-prompt');
+
     feedbackRow.querySelectorAll('.feedback-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const value = btn.dataset.value;
         trackEvent('feedback_given', { value: value, movie_title: movieData.movie_title || '' });
-        feedbackRow.querySelectorAll('.feedback-btn').forEach(b => b.disabled = true);
-        feedbackRow.querySelector('.feedback-label').textContent = value === 'up' ? '고마워요! 다음에 더 잘 맞춰볼게요 :)' : '아쉬웠다면 알려줘서 고마워요, 더 다듬어볼게요.';
+
+        if (value === 'down') {
+          promptEl.innerHTML = `
+            <div class="feedback-comment" style="width:100%;">
+              <span class="feedback-label">어떤 점이 아쉬웠어요? (선택)</span>
+              <textarea placeholder="편하게 적어주세요"></textarea>
+              <div class="feedback-comment-actions">
+                <button type="button" class="skip-btn">건너뛰기</button>
+                <button type="button" class="submit-btn">보내기</button>
+              </div>
+            </div>
+          `;
+          const textarea = promptEl.querySelector('textarea');
+          const finish = (comment) => {
+            trackEvent('feedback_detail', { movie_title: movieData.movie_title || '', comment: comment || '(없음)' });
+            promptEl.innerHTML = `<span class="feedback-label">아쉬웠다면 알려줘서 고마워요, 더 다듬어볼게요.</span>`;
+            scrollToBottom();
+          };
+          promptEl.querySelector('.submit-btn').addEventListener('click', () => finish(textarea.value.trim()));
+          promptEl.querySelector('.skip-btn').addEventListener('click', () => finish(''));
+        } else {
+          const surveyItems = [
+            { key: 'relevance', q: '이 추천, 지금 내 기분/상황에 잘 맞았나요?' },
+            { key: 'engagement', q: '사주/타로로 풀어주는 방식이 흥미로웠나요?' },
+            { key: 'trust', q: '추천 이유가 납득이 됐나요?' },
+            { key: 'retention', q: '다음에 또 쓰고 싶나요?' }
+          ];
+          const ratings = {};
+          promptEl.innerHTML = `
+            <div class="feedback-survey" style="width:100%; display:flex; flex-direction:column; gap:8px;">
+              <span class="feedback-label">고마워요! 짧은 설문 하나만 남겨줄래요? (선택)</span>
+              ${surveyItems.map(item => `
+                <div class="survey-item" data-key="${item.key}">
+                  <span class="survey-q">${item.q}</span>
+                  <div class="survey-stars">
+                    ${[1,2,3,4,5].map(n => `<span class="survey-star" data-n="${n}">★</span>`).join('')}
+                  </div>
+                </div>
+              `).join('')}
+              <div class="survey-submit-row">
+                <button type="button" class="survey-submit" disabled>제출하기</button>
+              </div>
+            </div>
+          `;
+          const submitBtn = promptEl.querySelector('.survey-submit');
+          promptEl.querySelectorAll('.survey-item').forEach(itemEl => {
+            const key = itemEl.dataset.key;
+            const stars = itemEl.querySelectorAll('.survey-star');
+            stars.forEach(star => {
+              star.addEventListener('click', () => {
+                const n = Number(star.dataset.n);
+                ratings[key] = n;
+                stars.forEach(s => s.classList.toggle('filled', Number(s.dataset.n) <= n));
+                submitBtn.disabled = Object.keys(ratings).length < surveyItems.length;
+              });
+            });
+          });
+          submitBtn.addEventListener('click', () => {
+            trackEvent('survey_submitted', {
+              movie_title: movieData.movie_title || '',
+              relevance: ratings.relevance,
+              engagement: ratings.engagement,
+              trust: ratings.trust,
+              retention: ratings.retention
+            });
+            promptEl.innerHTML = `<span class="feedback-label">응답 고마워요! 오늘의 씬을 더 다듬는 데 큰 도움이 됐어요.</span>`;
+            scrollToBottom();
+          });
+        }
       });
     });
 
